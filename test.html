@@ -3,16 +3,20 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="./grammar.js"></script>
     <script src="./simpleScript.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <textarea id="code"></textarea>
     <input id="button" type="button" value="run">
+    <div id="output"></div>
 
     <script>
       jQuery("#button").click(function() {
-        grammar.parse(jQuery("#code").val());
+        var script = grammar.parse(jQuery("#code").val());
+        SimpleScript.output(script, jQuery("#output"));
         return true;
       });
     </script>
+
   </body>
 </html>
