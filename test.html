@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="./grammar.js"></script>
+    <script src="./simpleScript.js"></script>
+  </head>
+  <body>
+    <textarea id="code"></textarea>
+    <input id="button" type="button" value="run">
+
+    <script>
+      jQuery("#button").click(function() {
+        grammar.parse(jQuery("#code").val());
+        return true;
+      });
+    </script>
+  </body>
+</html>
