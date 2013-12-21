@@ -24,4 +24,12 @@ SimpleScript = {
   },
 
   heap: {}
+
+  output: function(script, element) {
+    jQuery.each(script, function(i, stmt) {
+      var newDiv = document.createElement("<div");
+      stmt.insert(newDiv);
+      element.append(newDiv);
+    });
+  }
 }
