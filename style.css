@@ -1,3 +1,6 @@
-#output  > div > div  {
+div {
 	display: inline;
+}
+.no-inline {
+  display: block;
 }

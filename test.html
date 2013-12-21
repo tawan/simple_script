@@ -1,19 +1,38 @@
 <html>
   <head>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script src="./grammar.js"></script>
     <script src="./simpleScript.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <textarea id="code"></textarea>
-    <input id="button" type="button" value="run">
+    <input id="button" type="button" value="step">
     <div id="output"></div>
 
     <script>
+      var play = false;
+      var i = 0;
+      var q = [];
+      var runner = function() {
+        q[i]();
+        i++;
+        if (i < q.length && play) {
+          setTimeout(function() { runner(); }, 1000);
+        }
+      };
+
       jQuery("#button").click(function() {
-        var script = grammar.parse(jQuery("#code").val());
-        SimpleScript.output(script, jQuery("#output"));
+        if (q.length == 0) {
+          var script = grammar.parse(jQuery("#code").val());
+          SimpleScript.output(script, jQuery("#output"));
+          jQuery.each(script, function(i, a) {
+            a.exec(q);
+          });
+        }
+
+        runner();
         return true;
       });
     </script>

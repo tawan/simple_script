@@ -43,5 +43,7 @@ exp
         { $$ = SimpleScript.multiply($1, $3); }
     | NUMBER
         {$$ = SimpleScript.number($1);}
+    | IDENT
+        { $$ = SimpleScript.ident($1);}
     ;
 
