@@ -1,72 +1,39 @@
-var SimpleScript = {};
-
-SimpleScript.nodeFactory = {
-
-  createNode: function() {
-    var children = [];
-
-    return {
-      children: function() { return children; },
-        addChild: function(childNode) {
-          children.push(childNode);
-        },
+var SimpleScript = (function(my) {
+  my.Enumerable = function() {
+    this.each = function(fn) {
+      for (var i = 0; i < this.length; i++) {
+        fn(this[i]);
+      }
     }
-  },
+  };
 
-  createIdentifier: function(name) {
-    var identifier =  this.createNode();
-    identifier.name = function() {
-      return name;
+  my.Enumerable.prototype = Object.create(Array.prototype);
+
+  my.Node = function() {
+    var result;
+
+    this.eval = function() {
+      result = this.evalImpl();
+      return result;
+    };
+
+    this.evalImpl = function() {
+      //Inheriting Nodes have to implement this function.
+      return null;
+    };
+
+    this.result = function() {
+      return result;
     }
+  };
 
-    return identifier;
-  },
-
-  createNumber: function(number) {
-    var node =  this.createExpression();
-    node.result = function() {
-      return Number(number);
+  my.NumberNode = function(value) {
+    this.evalImpl = function() {
+      return Number(value);
     }
+  };
 
-    return node;
-  },
+  my.NumberNode.prototype = Object.create(new my.Node());
 
-  createExpression: function() {
-    var node = this.createNode();
-
-    node.result = function() {
-      return 0;
-    }
-
-    return node;
-  },
-
-  createAddition: function(children) {
-    var addition = this.createExpression();
-    addition.left = function() {
-      return children.left;
-    }
-
-    addition.right = function() {
-      return children.right;
-    }
-
-    addition.result = function() {
-      return addition.left().result() + addition.right().result();
-    }
-
-    return addition;
-  },
-
-  createAssignment: function(children) {
-    var assignment = this.createNode();
-    assignment.identifier = function() {
-      return children.identifier;
-    }
-
-    assignment.expression = function() {
-      return children.expression;
-    }
-    return assignment;
-  }
-}
+  return my;
+})(SimpleScript || {});
