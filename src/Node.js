@@ -10,9 +10,10 @@ var SimpleScript = (function(my) {
   my.Enumerable.prototype = Object.create(Array.prototype);
 
   my.Node = function() {
-    var result;
-
     this.eval = function() {
+      if (this.result() != undefined) {
+        return this.result();
+      }
       result = this.evalImpl();
       return result;
     };
@@ -27,13 +28,20 @@ var SimpleScript = (function(my) {
     }
   };
 
-  my.NumberNode = function(value) {
+  my.Number = function(value) {
     this.evalImpl = function() {
       return Number(value);
     }
   };
 
-  my.NumberNode.prototype = Object.create(new my.Node());
+  my.Number.prototype = new my.Node();
 
+  my.Addition = function(left, right) {
+    this.evalImpl = function() {
+      return left.eval() + right.eval();
+    }
+  }
+
+  my.Addition.prototype = my.Number.prototype;
   return my;
 })(SimpleScript || {});
