@@ -1,47 +1,26 @@
 var SimpleScript = (function(my) {
-  my.Enumerable = function() {
-    this.each = function(fn) {
-      for (var i = 0; i < this.length; i++) {
-        fn(this[i]);
+  my.factory = (function() {
+    var node = {
+      evalImpl: function() {
+        return null;
       }
     }
-  };
+    return {
+      createNode: function() {
+        var result;
+        newNode = Object.create(node);
+        newNode.eval = function() {
+          result = this.evalImpl();
+          return result;
+        };
+        return Object.create(node);
+      },
 
-  my.Enumerable.prototype = Object.create(Array.prototype);
-
-  my.Node = function() {
-    this.eval = function() {
-      if (this.result() != undefined) {
-        return this.result();
+      createNumber: function(value) {
+        
       }
-      result = this.evalImpl();
-      return result;
     };
+  })();
 
-    this.evalImpl = function() {
-      //Inheriting Nodes have to implement this function.
-      return null;
-    };
-
-    this.result = function() {
-      return result;
-    }
-  };
-
-  my.Number = function(value) {
-    this.evalImpl = function() {
-      return Number(value);
-    }
-  };
-
-  my.Number.prototype = new my.Node();
-
-  my.Addition = function(left, right) {
-    this.evalImpl = function() {
-      return left.eval() + right.eval();
-    }
-  }
-
-  my.Addition.prototype = my.Number.prototype;
   return my;
 })(SimpleScript || {});
