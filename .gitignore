@@ -1,4 +1,4 @@
 *.swp
 *.DS_Store
-grammar.js
+*grammar.js
 test/lib
