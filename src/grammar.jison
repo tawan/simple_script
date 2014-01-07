@@ -18,13 +18,14 @@
 "<"                   return 'LGT'
 [a-z]+                return 'IDENT'
 "*"                   return '*'
+"+"                   return '+'
 "="                   return '='
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
 /lex
 
-%left '*' '/'
+%left '*' '/' '+'
 
 %start expressions
 
