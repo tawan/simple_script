@@ -72,10 +72,10 @@ stmt
     ;
 
 exp
-    : exp '*' exp
-        { $$ = SimpleScript.multiply($1, $3); }
+    : exp '+' exp
+        { $$ = SimpleScript.treeFactory.createAddition($1, $3); }
     | NUMBER
-        {$$ = SimpleScript.number($1);}
+        {$$ = SimpleScript.treeFactory.createNumber($1);}
     | IDENT
         { $$ = SimpleScript.ident($1);}
     ;
