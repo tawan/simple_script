@@ -11,7 +11,7 @@ describe("SimpleScript", function() {
       beforeEach(function() { subject = SimpleScript.treeFactory.createNode(); });
 
       it("has children", function() {
-        expect(subject.children()).toEqual([]);
+        expect(subject.children().each).toBeDefined();
       });
     });
 
@@ -31,6 +31,7 @@ describe("SimpleScript", function() {
         });
       });
     });
+
     describe("Addition", function() {
       var addition, left, right;
 
@@ -53,6 +54,29 @@ describe("SimpleScript", function() {
         });
       });
     });
+
+    describe("Multiplication", function() {
+      var addition, left, right;
+
+      beforeEach(function() {
+        left = jasmine.createSpyObj("left", [ "visit" ]);
+        right = jasmine.createSpyObj("right", [ "visit" ]);
+        addition = SimpleScript.treeFactory.createMultiplication(left, right);
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() { addition.visit(programm); });
+
+        it("visits its children", function() {
+          expect(left.visit).toHaveBeenCalledWith(programm);
+          expect(right.visit).toHaveBeenCalledWith(programm);
+        });
+
+        it("instructs to mulitply", function() {
+          expect(programm.pop()).toEqual([ "MUL" ]);
+        });
+      });
+    });
   });
 
   describe("virtual machine", function() {
@@ -62,7 +86,9 @@ describe("SimpleScript", function() {
       subject = SimpleScript.createVM();
       instruction_1 = [ "PUSH" , 2 ];
       instruction_2 = [ "ADD" ]
-      instructions = SimpleScript.createEnumerable([ instruction_1, instruction_2 ]);
+      instructions = SimpleScript.createEnumerable();
+      instructions.push(instruction_1);
+      instructions.push(instruction_2);
     });
 
     describe("#execute", function() {
@@ -95,6 +121,34 @@ describe("SimpleScript", function() {
         subject["ADD"]();
         expect(subject.stack().pop()).toEqual(sum);
       });
+    });
+
+    describe("#MUL", function() {
+      it("pops two values and mulitplies them and writes the sum back to the stack", function() {
+        var left = 3;
+        var right = 4
+        var product = left * right;
+        subject.stack().push(left);
+        subject.stack().push(right);
+        subject["MUL"]();
+        expect(subject.stack().pop()).toEqual(product);
+      });
+    });
+  });
+
+  describe("simple program", function() {
+    var programm = "(1 + 2) * (5 + 5);";
+    var tree;
+    beforeEach(function() {
+      tree = grammar.parse(programm);
+    });
+
+    it("performs correctly", function() {
+      var instructions = SimpleScript.createEnumerable();
+      tree.visit(instructions);
+      var vm = SimpleScript.createVM();
+      var result = vm.execute(instructions);
+      expect(result).toBe(30);
     });
   });
 });

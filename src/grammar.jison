@@ -20,6 +20,8 @@
 "*"                   return '*'
 "+"                   return '+'
 "="                   return '='
+"("                   return '('
+")"                   return ')'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -33,7 +35,7 @@
 
 expressions
     : stmt_list EOF
-        { return SimpleScript.create($1); }
+        { return SimpleScript.treeFactory.createNode($1); }
     ;
 
 block
@@ -58,7 +60,7 @@ condition
 
 stmt_list
     : stmt SEMI
-        { $$ = [ $1 ]; }
+        { $$ = SimpleScript.createEnumerable(); $$.push($1); }
     | stmt_list stmt SEMI
         { $1.push($2); $$ = $1; }
     ;
@@ -73,8 +75,12 @@ stmt
     ;
 
 exp
-    : exp '+' exp
+    : '(' exp ')'
+        { $$ = $2;  }
+    | exp '+' exp
         { $$ = SimpleScript.treeFactory.createAddition($1, $3); }
+    | exp '*' exp
+        { $$ = SimpleScript.treeFactory.createMultiplication($1, $3); }
     | NUMBER
         {$$ = SimpleScript.treeFactory.createNumber($1);}
     | IDENT
