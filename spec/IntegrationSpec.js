@@ -1,17 +1,17 @@
 describe("SimpleScript", function() {
   describe("simple program", function() {
-    var programm = "(1 + 2) * (5 + 5);";
+    var programm = "x = 2; y = (1 + x) * (5 + 5); x = y + 1; x;";
     var tree;
     beforeEach(function() {
       tree = grammar.parse(programm);
     });
 
     it("performs correctly", function() {
-      var instructions = SimpleScript.createEnumerable();
+      var instructions = SimpleScript.createInstructionSet();
       tree.visit(instructions);
       var vm = SimpleScript.createVM();
       var result = vm.execute(instructions);
-      expect(result).toBe(30);
+      expect(result).toBe(31);
     });
   });
 });

@@ -97,5 +97,31 @@ describe("SimpleScript", function() {
         expect(subject.stack().pop()).toEqual(product);
       });
     });
+
+    describe("#POP", function() {
+      it("pops value and stores it into given segment at given index", function() {
+        subject.stack().push(666);
+        subject["POP"]("local", 0);
+        expect(subject.memory().local.get(0)).toEqual(666);
+      });
+    });
+  });
+
+  describe("instruction set", function() {
+    var subject;
+
+    beforeEach(function() {
+      subject = SimpleScript.createInstructionSet();
+    });
+
+    it("is enumerable", function() {
+      expect(subject.each).toBeDefined();
+    });
+
+    it("maps variables to indices", function() {
+      expect(subject.getIndex("x")).toBe(0);
+      expect(subject.getIndex("y")).toBe(1);
+      expect(subject.getIndex("x")).toBe(0);
+    });
   });
 });

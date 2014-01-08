@@ -67,7 +67,7 @@ stmt_list
 
 stmt
     : IDENT '=' exp
-        { $$ = SimpleScript.assignment($1, $3); }
+        { $$ = SimpleScript.treeFactory.createAssignment($1, $3); }
     | exp
         { $$ = $1; }
     | WHILE condition block
@@ -84,5 +84,5 @@ exp
     | NUMBER
         {$$ = SimpleScript.treeFactory.createNumber($1);}
     | IDENT
-        { $$ = SimpleScript.ident($1);}
+        { $$ = SimpleScript.treeFactory.createIdent($1);}
     ;

@@ -16,19 +16,35 @@ var SimpleScript = (function(my) {
       programm.push([ "PUSH", "constant", this.nativeValue ]);
     };
 
+    var ident = Object.create(node);
+    ident.name = function() {
+      return this._name;
+    };
+    ident.visit = function(programm) {
+      var index = programm.getIndex(this.name());
+      programm.push([ "PUSH", "local", index ]);
+    };
+
     var addition = Object.create(node);
     addition.visit = function(programm) {
       this._left.visit(programm);
       this._right.visit(programm);
       programm.push([ "ADD" ]);
-    }
+    };
 
     var multiplication = Object.create(node);
     multiplication.visit = function(programm) {
       this._left.visit(programm);
       this._right.visit(programm);
       programm.push([ "MUL" ]);
-    }
+    };
+
+    var assignment = Object.create(node);
+    assignment.visit = function(programm) {
+      this._expr.visit(programm);
+      var index = programm.getIndex(this._ident.name());
+      programm.push([ "POP", "local", index ]);
+    };
 
     return {
       createNode: function(children) {
@@ -58,6 +74,19 @@ var SimpleScript = (function(my) {
         m._left = left;
         m._right = right;
         return m;
+      },
+
+      createAssignment: function(ident, expr) {
+        var a = Object.create(assignment);
+        a._ident = this.createIdent(ident);
+        a._expr = expr;
+        return a;
+      },
+
+      createIdent: function(name) {
+        var i = Object.create(ident);
+        i._name = name;
+        return i;
       }
     };
   })();

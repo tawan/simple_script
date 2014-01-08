@@ -2,7 +2,7 @@ describe("SimpleScript", function() {
   var programm;
 
   beforeEach(function() {
-    programm = [];
+    programm = SimpleScript.createInstructionSet();
   });
 
   describe("treeFactory", function() {
@@ -28,6 +28,27 @@ describe("SimpleScript", function() {
         it("pushes its native value", function() {
           number.visit(programm);
           expect(programm.pop()).toEqual([ "PUSH", "constant", nativeValue ]);
+        });
+      });
+    });
+
+
+    describe("Ident", function() {
+      var ident;
+      var name = "x";
+      beforeEach(function() { ident = SimpleScript.treeFactory.createIdent(name); });
+
+
+      describe("#name", function() {
+        it("returns its name", function() {
+          expect(ident.name()).toEqual(name);
+        });
+      });
+
+      describe("#visit", function() {
+        it("pushes its assigned value", function() {
+          ident.visit(programm);
+          expect(programm.pop()).toEqual([ "PUSH", "local", 0 ]);
         });
       });
     });
@@ -74,6 +95,29 @@ describe("SimpleScript", function() {
 
         it("instructs to mulitply", function() {
           expect(programm.pop()).toEqual([ "MUL" ]);
+        });
+      });
+    });
+
+    describe("Assignment", function() {
+      var assignment, ident, expr;
+      var name = "x";
+
+      beforeEach(function() {
+        ident = { name: function() { return name; } };
+        expr = jasmine.createSpyObj("expr", [ "visit" ]);
+        assignment = SimpleScript.treeFactory.createAssignment(ident, expr);
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() { assignment.visit(programm); });
+
+        it("visits its expression", function() {
+          expect(expr.visit).toHaveBeenCalledWith(programm);
+        });
+
+        it("instructs to pop the stacked value into the local segment with the correct index", function() {
+          expect(programm.pop()).toEqual(["POP", "local", 0]);
         });
       });
     });
