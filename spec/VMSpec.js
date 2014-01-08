@@ -6,21 +6,22 @@ describe("SimpleScript", function() {
   });
 
   describe("virtual machine", function() {
-    var subject, instruction_1, instruction_2, instructions;
+    var subject;
 
     beforeEach(function() {
       subject = SimpleScript.createVM();
-      instruction_1 = [ "PUSH" , 2 ];
-      instruction_2 = [ "ADD" ]
-      instructions = SimpleScript.createEnumerable();
-      instructions.push(instruction_1);
-      instructions.push(instruction_2);
     });
 
     describe("#execute", function() {
+      var instruction_1, instruction_2, instructions;
       beforeEach(function() {
         spyOn(subject, "PUSH").and.callThrough();
         spyOn(subject, "ADD").and.callThrough();
+        instruction_1 = [ "PUSH" , 2 ];
+        instruction_2 = [ "ADD" ];
+        instructions = SimpleScript.createEnumerable();
+        instructions.push(instruction_1);
+        instructions.push(instruction_2);
         subject.execute(instructions);
       });
 
