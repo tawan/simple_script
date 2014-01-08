@@ -47,22 +47,53 @@ describe("SimpleScript", function() {
       });
     });
 
-    describe("#execute", function() {
+    it("can load instructions", function() {
+      var instructions = {};
+      subject.load(instructions);
+      expect(subject.currentInstructions()).toBe(instructions);
+    });
+
+    describe("execution", function() {
       var instruction_1, instruction_2, instructions;
       beforeEach(function() {
         spyOn(subject, "PUSH").and.callThrough();
         spyOn(subject, "ADD").and.callThrough();
         instruction_1 = [ "PUSH" , "local", 2 ];
         instruction_2 = [ "ADD" ];
-        instructions = SimpleScript.createEnumerable();
+        instructions = SimpleScript.createInstructionSet();
         instructions.push(instruction_1);
         instructions.push(instruction_2);
-        subject.execute(instructions);
+        subject.load(instructions);
       });
 
-      it("executes each instruction", function() {
-        expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
-        expect(subject["ADD"]).toHaveBeenCalled();
+
+      describe("#step", function() {
+        beforeEach(function() {
+          subject.step();
+        });
+
+        it("executes only one instruction", function() {
+          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
+          expect(subject["ADD"]).not.toHaveBeenCalled();
+        });
+
+        it("executes one instruction after the other", function() {
+          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
+          subject.step();
+          expect(subject["ADD"]).toHaveBeenCalled();
+
+        });
+      });
+
+      describe("#run", function() {
+        beforeEach(function() {
+          subject.run();
+        });
+
+        it("it executes all remaining instructions", function() {
+          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
+          expect(subject["ADD"]).toHaveBeenCalled();
+        });
       });
     });
 

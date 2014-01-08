@@ -19,15 +19,38 @@ var SimpleScript = (function(my) {
       }
     };
 
+    var stepCounter = 0;
+    var currentInstructions;
+
     return {
-      execute: function(instructions) {
-        var self = this;
+      run: function() {
+        while(this.hasPendingInstructions()) {
+          this.step();
+        }
+      },
 
-        instructions.each(function(instruction) {
-          self[instruction[0]](instruction[1], instruction[2]);
-        });
+      step: function() {
+        var instruction = this.currentInstructions()[stepCounter];
+        if (!instruction) {
+          throw "Cannot execute instruction!";
+        }
+        this[instruction[0]](instruction[1], instruction[2]);
+        stepCounter++;
+      },
 
-        return self.stack().pop();
+      load: function(instructions) {
+        currentInstructions = instructions;
+      },
+
+      currentInstructions: function() {
+        if (!currentInstructions) {
+          throw "VM has not instructions loaded!";
+        }
+        return currentInstructions;
+      },
+
+      hasPendingInstructions: function() {
+        return stepCounter < this.currentInstructions().length;
       },
 
       stack: function() {

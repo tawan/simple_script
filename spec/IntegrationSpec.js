@@ -10,8 +10,8 @@ describe("SimpleScript", function() {
       var instructions = SimpleScript.createInstructionSet();
       tree.visit(instructions);
       var vm = SimpleScript.createVM();
-      var result = vm.execute(instructions);
-      expect(result).toBe(31);
+      vm.load(instructions);
+      vm.run();
     });
   });
 });
