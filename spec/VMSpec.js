@@ -12,12 +12,47 @@ describe("SimpleScript", function() {
       subject = SimpleScript.createVM();
     });
 
+    describe("memory", function() {
+      beforeEach(function() {
+        subject = subject.memory();
+      });
+
+      it("has segment for local variables", function() {
+        expect(subject.local).toBeDefined();
+      });
+
+      describe("locals segment", function() {
+        beforeEach(function() {
+          subject = subject.local;
+        });
+
+        it("can add values", function() {
+          subject.push(666)
+          expect(subject.get(0)).toBe(666);
+        });
+      });
+
+      it("has segment for constants", function() {
+        expect(subject.constant).toBeDefined();
+      });
+
+      describe("constants segment", function() {
+        beforeEach(function() {
+          subject = subject.constant;
+        });
+        it("is initialized with unsigned 8 bit values", function() {
+          expect(subject.get(0)).toBe(0);
+          expect(subject.get(255)).toBe(255);
+        });
+      });
+    });
+
     describe("#execute", function() {
       var instruction_1, instruction_2, instructions;
       beforeEach(function() {
         spyOn(subject, "PUSH").and.callThrough();
         spyOn(subject, "ADD").and.callThrough();
-        instruction_1 = [ "PUSH" , 2 ];
+        instruction_1 = [ "PUSH" , "local", 2 ];
         instruction_2 = [ "ADD" ];
         instructions = SimpleScript.createEnumerable();
         instructions.push(instruction_1);
@@ -26,14 +61,15 @@ describe("SimpleScript", function() {
       });
 
       it("executes each instruction", function() {
-        expect(subject["PUSH"]).toHaveBeenCalledWith(2);
+        expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
         expect(subject["ADD"]).toHaveBeenCalled();
       });
     });
 
     describe("#PUSH", function() {
-      it("pushes a value to the stack", function() {
-        subject["PUSH"](666);
+      it("pushes a value from a given segment with a given indes to the stack", function() {
+        subject.memory().local.push(666);
+        subject["PUSH"]("local", 0);
         expect(subject.stack().pop()).toEqual(666);
       });
     });

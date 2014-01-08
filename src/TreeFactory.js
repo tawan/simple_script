@@ -13,7 +13,7 @@ var SimpleScript = (function(my) {
 
     var number = Object.create(node);
     number.visit = function(programm) {
-      programm.push([ "PUSH", this.nativeValue ]);
+      programm.push([ "PUSH", "constant", this.nativeValue ]);
     };
 
     var addition = Object.create(node);

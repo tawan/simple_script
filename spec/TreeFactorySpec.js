@@ -27,7 +27,7 @@ describe("SimpleScript", function() {
       describe("#visit", function() {
         it("pushes its native value", function() {
           number.visit(programm);
-          expect(programm.pop()).toEqual([ "PUSH", nativeValue ]);
+          expect(programm.pop()).toEqual([ "PUSH", "constant", nativeValue ]);
         });
       });
     });
