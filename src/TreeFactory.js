@@ -3,6 +3,9 @@ var SimpleScript = (function(my) {
   my.treeFactory = (function() {
     var node = {
       children: function() {
+        if (typeof this._children == "undefined") {
+          this._children = SimpleScript.createEnumerable();
+        }
         return this._children;
       },
 
@@ -15,6 +18,7 @@ var SimpleScript = (function(my) {
     number.visit = function(programm) {
       programm.push([ "PUSH", "constant", this.nativeValue ]);
     };
+    number.type = 'number';
 
     var ident = Object.create(node);
     ident.name = function() {
@@ -24,27 +28,33 @@ var SimpleScript = (function(my) {
       var index = programm.getIndex(this.name());
       programm.push([ "PUSH", "local", index ]);
     };
+    ident.type = 'ident';
 
     var addition = Object.create(node);
     addition.visit = function(programm) {
-      this._left.visit(programm);
-      this._right.visit(programm);
+      this.children().each(function(c) {
+        c.visit(programm);
+      });
       programm.push([ "ADD" ]);
     };
+    addition.type = 'addition';
 
     var multiplication = Object.create(node);
     multiplication.visit = function(programm) {
-      this._left.visit(programm);
-      this._right.visit(programm);
+      this.children().each(function(c) {
+        c.visit(programm);
+      });
       programm.push([ "MUL" ]);
     };
+    multiplication.type = 'multiplication';
 
     var assignment = Object.create(node);
     assignment.visit = function(programm) {
-      this._expr.visit(programm);
-      var index = programm.getIndex(this._ident.name());
+      this.children()[1].visit(programm);
+      var index = programm.getIndex(this.children()[0].name());
       programm.push([ "POP", "local", index ]);
     };
+    assignment.type = 'assignment';
 
     return {
       createNode: function(children) {
@@ -63,23 +73,23 @@ var SimpleScript = (function(my) {
       },
 
       createAddition: function(left, right) {
-        var newAddition = Object.create(addition);
-        newAddition._left = left;
-        newAddition._right = right;
-        return newAddition;
+        var a = Object.create(addition);
+        a.children().push(left);
+        a.children().push(right);
+        return a;
       },
 
       createMultiplication: function(left, right) {
         var m = Object.create(multiplication);
-        m._left = left;
-        m._right = right;
+        m.children().push(left);
+        m.children().push(right);
         return m;
       },
 
       createAssignment: function(ident, expr) {
         var a = Object.create(assignment);
-        a._ident = this.createIdent(ident);
-        a._expr = expr;
+        a.children().push(this.createIdent(ident));
+        a.children().push(expr);
         return a;
       },
 

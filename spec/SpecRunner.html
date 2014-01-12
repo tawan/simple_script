@@ -17,7 +17,7 @@
   <script type="text/javascript" src="../src/TreeRenderer.js"></script>
   <script type="text/javascript" src="../src/VM.js"></script>
   <script type="text/javascript" src="../src/grammar.js"></script>
-  <script type="text/javascript" src="../lib/jquery-1.20.2.js"></script>
+  <script type="text/javascript" src="../lib/jquery-1.10.2.js"></script>
 
   <!-- include spec files here... -->
   <script type="text/javascript" src="TreeFactorySpec.js"></script>
@@ -28,5 +28,18 @@
 </head>
 
 <body>
+  <textarea id="input" cols="100" rows="10">
+    x = 2;
+    y = (1 + x) * (5 + 5);
+    x = y + 1;
+    x;
+  </textarea>
+  <div id="source" />
+
+    <script type="text/javascript">
+      var tree = grammar.parse(jQuery('#input').text());
+      SimpleScript.treeRenderer.decorate(tree);
+      SimpleScript.treeRenderer.render(tree, jQuery('#source'));
+    </script>
 </body>
 </html>
