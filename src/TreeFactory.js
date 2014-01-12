@@ -91,5 +91,25 @@ var SimpleScript = (function(my) {
     };
   })();
 
+  var treeWalker = (function() {
+    var walkerFunc = function walkerFunc(node, fn) {
+      fn(node);
+      node.children().each(function(child) {
+        walkerFunc(child, fn);
+      });
+    };
+
+    return {
+      each: function(fn) {
+        walkerFunc(this._tree, fn);
+      }
+    };
+  })();
+
+  my.createTreeWalker = function(tree) {
+    var t = Object.create(treeWalker);
+    t._tree = tree;
+    return t;
+  };
   return my;
 })(SimpleScript || {});

@@ -122,4 +122,30 @@ describe("SimpleScript", function() {
       });
     });
   });
+
+  describe("treeWalker", function() {
+    var subject;
+    var tree;
+    var children;
+
+    beforeEach(function() {
+      children = SimpleScript.createEnumerable();
+      children.push(SimpleScript.treeFactory.createNode());
+      children.push(SimpleScript.treeFactory.createNode());
+      tree = SimpleScript.treeFactory.createNode(children);
+      subject = SimpleScript.createTreeWalker(tree);
+    });
+
+    it("should itereate over each node", function() {
+      subject.each(function(node) {
+        expect(node.passed).toBeUndefined();
+        node.passed = true
+      });
+
+      expect(tree.passed).toBe(true);
+      children.each(function(child) {
+        expect(child.passed).toBe(true);
+      });
+    });
+  });
 });
