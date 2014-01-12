@@ -17,8 +17,6 @@ describe("SimpleScript", function() {
 
     });
 
-
-
     it("decorates all nodes with render functions", function() {
       subject.decorate(tree);
       var treeWalker = SimpleScript.createTreeWalker(tree);
