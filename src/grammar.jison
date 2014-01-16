@@ -35,7 +35,7 @@
 
 expressions
     : stmt_list EOF
-        { return SimpleScript.treeFactory.createNode($1); }
+        { return SimpleScript.treeFactory.createNode({ children: $1 }); }
     ;
 
 block
@@ -67,7 +67,10 @@ stmt_list
 
 stmt
     : IDENT '=' exp
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "assignment", children: [ $1, $3 ]}); }
+        {
+          var ident = SimpleScript.treeFactory.createNode({ line: yylineno, type: "ident", value: $1 });
+          $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "assignment", children: [ ident, $3 ]});
+        }
     | exp
         { $$ = $1; }
     | WHILE condition block

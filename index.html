@@ -10,6 +10,12 @@
   <script type="text/javascript" src="src/VM.js"></script>
   <script type="text/javascript" src="src/grammar.js"></script>
   <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="src/Enumerable.js"></script>
+  <script type="text/javascript" src="src/TreeFactory.js"></script>
+  <script type="text/javascript" src="src/TreeRenderer.js"></script>
+  <script type="text/javascript" src="src/VM.js"></script>
+  <script type="text/javascript" src="src/grammar.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
   <script src="http://localhost:8080/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
   <style type="text/css" media="screen">
@@ -24,15 +30,23 @@
 </head>
 
 <body>
-  <div id="editor">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-    }
+  <div id="editor">
+    x = 2;
+    y = (1 + x) * (5 + 5);
+    x = y + 1;
+    x;
   </div>
   <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/solarized_light");
     editor.getSession().setMode("ace/mode/mode-plain_text");
+
+    var tree = grammar.parse(editor.getValue());
+    var instructions = SimpleScript.createInstructionSet();
+    tree.visit(instructions);
+    var vm = SimpleScript.createVM();
+    vm.load(instructions);
+    vm.run();
   </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ describe("SimpleScript", function() {
       var vm = SimpleScript.createVM();
       vm.load(instructions);
       vm.run();
+      expect(vm.stack().pop()).toBe(31);
     });
   });
 });
