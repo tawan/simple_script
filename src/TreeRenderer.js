@@ -19,7 +19,7 @@ var SimpleScript = (function(my) {
           case "number":
             node.createDomElement = function() {
               var el = jQuery(document.createElement('span'));
-              el.text(node.nativeValue);
+              el.text(node.nativeValue());
               return el;
             };
             break;

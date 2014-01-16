@@ -19,10 +19,10 @@ describe("SimpleScript", function() {
       });
 
       describe("constructor", function() {
-        it("all given arguments that are node descendants are added to children", function() {
+        it("children property of given argument become nodes children", function() {
           var first_child = SimpleScript.treeFactory.createNode();
           var second_child = SimpleScript.treeFactory.createNode();
-          subject = SimpleScript.treeFactory.createNode(first_child, second_child, {});
+          subject = SimpleScript.treeFactory.createNode({ children: [ first_child, second_child ] });
           expect(subject.children()[0]).toBe(first_child);
           expect(subject.children()[1]).toBe(second_child);
           expect(subject.children()[2]).toBeUndefined();
@@ -36,7 +36,7 @@ describe("SimpleScript", function() {
       var nativeValue = Number(value);
 
       beforeEach(function() {
-        number = SimpleScript.treeFactory.createNumber(value);
+        number = SimpleScript.treeFactory.createNode({ type: "number", value: value });
       });
 
       describe("#visit", function() {
@@ -51,7 +51,7 @@ describe("SimpleScript", function() {
     describe("Ident", function() {
       var ident;
       var name = "x";
-      beforeEach(function() { ident = SimpleScript.treeFactory.createIdent(name); });
+      beforeEach(function() { ident = SimpleScript.treeFactory.createNode({ type: "ident", value: name }); });
 
 
       describe("#name", function() {
@@ -72,9 +72,9 @@ describe("SimpleScript", function() {
       var addition, left, right;
 
       beforeEach(function() {
-        left = jasmine.createSpyObj("left", [ "visit" ]);
-        right = jasmine.createSpyObj("right", [ "visit" ]);
-        addition = SimpleScript.treeFactory.createAddition(left, right);
+        left = jasmine.createSpyObj("left", [ "visit", "isNode" ]);
+        right = jasmine.createSpyObj("right", [ "visit", "isNode" ]);
+        addition = SimpleScript.treeFactory.createNode({ type: "addition", children: [ left, right ] });
       });
 
       describe("#visit", function() {
@@ -97,7 +97,7 @@ describe("SimpleScript", function() {
       beforeEach(function() {
         left = jasmine.createSpyObj("left", [ "visit" ]);
         right = jasmine.createSpyObj("right", [ "visit" ]);
-        addition = SimpleScript.treeFactory.createMultiplication(left, right);
+        addition = SimpleScript.treeFactory.createNode({ type: "multiplication", children: [ left, right ] });
       });
 
       describe("#visit", function() {
@@ -121,7 +121,7 @@ describe("SimpleScript", function() {
       beforeEach(function() {
         ident = { name: function() { return name; } };
         expr = jasmine.createSpyObj("expr", [ "visit" ]);
-        assignment = SimpleScript.treeFactory.createAssignment(ident, expr);
+        assignment = SimpleScript.treeFactory.createNode({ type: "assignment", children: [ ident, expr ]});
       });
 
       describe("#visit", function() {
@@ -148,7 +148,7 @@ describe("SimpleScript", function() {
     beforeEach(function() {
       child_1 = SimpleScript.treeFactory.createNode() ;
       child_2 = SimpleScript.treeFactory.createNode() ;
-      tree = SimpleScript.treeFactory.createNode(child_1, child_2);
+      tree = SimpleScript.treeFactory.createNode({ children: [ child_1, child_2 ] });
       subject = SimpleScript.createTreeWalker(tree);
     });
 

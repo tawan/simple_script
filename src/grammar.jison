@@ -67,7 +67,7 @@ stmt_list
 
 stmt
     : IDENT '=' exp
-        { $$ = SimpleScript.treeFactory.createAssignment($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ type: "assignment", children: [ $1, $3 ]}); }
     | exp
         { $$ = $1; }
     | WHILE condition block
@@ -78,11 +78,11 @@ exp
     : '(' exp ')'
         { $$ = $2;  }
     | exp '+' exp
-        { $$ = SimpleScript.treeFactory.createAddition($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ type: "addition", children: [ $1, $3 ]}); }
     | exp '*' exp
-        { $$ = SimpleScript.treeFactory.createMultiplication($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ type: "multiplication", children: [ $1, $3 ]}); }
     | NUMBER
-        {$$ = SimpleScript.treeFactory.createNumber($1);}
+        {$$ = SimpleScript.treeFactory.createNode({ type: "number", value: $1 });}
     | IDENT
-        { $$ = SimpleScript.treeFactory.createIdent($1);}
+        {$$ = SimpleScript.treeFactory.createNode({ type: "ident", value: $1 });}
     ;

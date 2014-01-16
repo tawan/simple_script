@@ -13,6 +13,7 @@ var SimpleScript = (function(my) {
     }
     else {
       arr.each = iterator;
+      return arr;
     }
   };
 

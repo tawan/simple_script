@@ -8,7 +8,7 @@ describe("SimpleScript", function() {
       children.push(SimpleScript.treeFactory.createNode());
       children.push(SimpleScript.treeFactory.createNode());
 
-      tree = SimpleScript.treeFactory.createNode(children[0], children[1]);
+      tree = SimpleScript.treeFactory.createNode({ children: children });
     });
 
     it("decorates all nodes with render functions", function() {
@@ -33,14 +33,14 @@ describe("SimpleScript", function() {
       });
 
       it("renders a number node", function() {
-        var node = SimpleScript.treeFactory.createNumber(4);
+        var node = SimpleScript.treeFactory.createNode({ type: "number", value: "4" });
         subject.decorate(node);
         subject.render(node, parentElement);
         expect(parentElement.html()).toEqual("<span>4</span>")
       });
 
       it("renders an ident node", function() {
-        var node = SimpleScript.treeFactory.createIdent("x");
+        var node = SimpleScript.treeFactory.createNode({ type: "ident", value: "x" });;
         subject.decorate(node);
         subject.render(node, parentElement);
         expect(parentElement.html()).toEqual("<span>x</span>")
@@ -50,26 +50,27 @@ describe("SimpleScript", function() {
         var left, right;
 
         beforeEach(function() {
-          left = SimpleScript.treeFactory.createNumber(2);
-          right = SimpleScript.treeFactory.createNumber(3);
+          left = SimpleScript.treeFactory.createNode({ type: "number", value: "2" });;
+          right = SimpleScript.treeFactory.createNode({ type: "number", value: "3" });;
         });
 
         it("renders a multiplication node", function() {
-          var node = SimpleScript.treeFactory.createMultiplication(left, right);
+          var node = SimpleScript.treeFactory.createNode({ type: "multiplication", children: [ left, right] });;
           subject.decorate(node);
           subject.render(node, parentElement);
           expect(parentElement.html()).toEqual("<span>2</span><span>*</span><span>3</span>")
         });
 
         it("renders an addition node", function() {
-          var node = SimpleScript.treeFactory.createAddition(left, right);
+          var node = SimpleScript.treeFactory.createNode({ type: "addition", children: [ left, right] });;
           subject.decorate(node);
           subject.render(node, parentElement);
           expect(parentElement.html()).toEqual("<span>2</span><span>+</span><span>3</span>")
         });
 
         it("renders an assignemt node", function() {
-          var node = SimpleScript.treeFactory.createAssignment("x", right);
+          left = SimpleScript.treeFactory.createNode({ type: "ident", value: "x" });;
+          var node = SimpleScript.treeFactory.createNode({ type: "assignment", children: [ left, right] });;
           subject.decorate(node);
           subject.render(node, parentElement);
           expect(parentElement.html()).toEqual("<span>x</span><span>=</span><span>3</span>")
