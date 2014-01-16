@@ -13,6 +13,21 @@ describe("SimpleScript", function() {
       it("has children", function() {
         expect(subject.children().each).toBeDefined();
       });
+
+      it("is a node", function() {
+        expect(subject.isNode).toBe(true);
+      });
+
+      describe("constructor", function() {
+        it("all given arguments that are node descendants are added to children", function() {
+          var first_child = SimpleScript.treeFactory.createNode();
+          var second_child = SimpleScript.treeFactory.createNode();
+          subject = SimpleScript.treeFactory.createNode(first_child, second_child, {});
+          expect(subject.children()[0]).toBe(first_child);
+          expect(subject.children()[1]).toBe(second_child);
+          expect(subject.children()[2]).toBeUndefined();
+        });
+      });
     });
 
     describe("Number", function() {
@@ -127,12 +142,13 @@ describe("SimpleScript", function() {
     var subject;
     var tree;
     var children;
+    var child_1;
+    var child_2;
 
     beforeEach(function() {
-      children = SimpleScript.createEnumerable();
-      children.push(SimpleScript.treeFactory.createNode());
-      children.push(SimpleScript.treeFactory.createNode());
-      tree = SimpleScript.treeFactory.createNode(children);
+      child_1 = SimpleScript.treeFactory.createNode() ;
+      child_2 = SimpleScript.treeFactory.createNode() ;
+      tree = SimpleScript.treeFactory.createNode(child_1, child_2);
       subject = SimpleScript.createTreeWalker(tree);
     });
 
@@ -143,9 +159,8 @@ describe("SimpleScript", function() {
       });
 
       expect(tree.passed).toBe(true);
-      children.each(function(child) {
-        expect(child.passed).toBe(true);
-      });
+      expect(child_1.passed).toBe(true);
+      expect(child_2.passed).toBe(true);
     });
   });
 });

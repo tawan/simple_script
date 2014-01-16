@@ -8,7 +8,7 @@ describe("SimpleScript", function() {
       children.push(SimpleScript.treeFactory.createNode());
       children.push(SimpleScript.treeFactory.createNode());
 
-      tree = SimpleScript.treeFactory.createNode(children);
+      tree = SimpleScript.treeFactory.createNode(children[0], children[1]);
     });
 
     it("decorates all nodes with render functions", function() {

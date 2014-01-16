@@ -11,7 +11,9 @@ var SimpleScript = (function(my) {
 
       visit: function(programm) {
         this.children().each(function(child) { child.visit(programm); });
-      }
+      },
+
+      isNode: true
     };
 
     var number = Object.create(node);
@@ -57,9 +59,12 @@ var SimpleScript = (function(my) {
     assignment.type = 'assignment';
 
     return {
-      createNode: function(children) {
-        if (typeof children == "undefined") {
-          children = my.createEnumerable();
+      createNode: function() {
+        var children = my.createEnumerable();
+        for(var i = 0; i < arguments.length; i++) {
+          if (arguments[i].isNode) {
+            children.push(arguments[i]);
+          }
         }
         var newNode = Object.create(node);
         newNode._children = children;
