@@ -18,6 +18,11 @@ describe("SimpleScript", function() {
         expect(subject.isNode).toBe(true);
       });
 
+      it("has a line number", function() {
+        var node = SimpleScript.treeFactory.createNode({ line: 44 });
+        expect(node.line()).toBe(44);
+      });
+
       describe("constructor", function() {
         it("children property of given argument become nodes children", function() {
           var first_child = SimpleScript.treeFactory.createNode();

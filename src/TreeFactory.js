@@ -13,6 +13,10 @@ var SimpleScript = (function(my) {
         this.children().each(function(child) { child.visit(programm); });
       },
 
+      line: function() {
+        return this._line;
+      },
+
       isNode: true
     };
 
@@ -88,6 +92,7 @@ var SimpleScript = (function(my) {
         newNode.type = spec.type;
         newNode._children = my.createEnumerable(spec.children);
         newNode._value = spec.value;
+        newNode._line = spec.line;
         return newNode;
       }
     };
