@@ -47,7 +47,7 @@ describe("SimpleScript", function() {
       describe("#visit", function() {
         it("pushes its native value", function() {
           number.visit(programm);
-          expect(programm.pop()).toEqual([ "PUSH", "constant", nativeValue ]);
+          expect(programm.pop().instr).toEqual([ "PUSH", "constant", nativeValue ]);
         });
       });
     });
@@ -68,7 +68,7 @@ describe("SimpleScript", function() {
       describe("#visit", function() {
         it("pushes its assigned value", function() {
           ident.visit(programm);
-          expect(programm.pop()).toEqual([ "PUSH", "local", 0 ]);
+          expect(programm.pop().instr).toEqual([ "PUSH", "local", 0 ]);
         });
       });
     });
@@ -91,7 +91,7 @@ describe("SimpleScript", function() {
         });
 
         it("instructs to add", function() {
-          expect(programm.pop()).toEqual([ "ADD" ]);
+          expect(programm.pop().instr).toEqual([ "ADD" ]);
         });
       });
     });
@@ -114,7 +114,7 @@ describe("SimpleScript", function() {
         });
 
         it("instructs to mulitply", function() {
-          expect(programm.pop()).toEqual([ "MUL" ]);
+          expect(programm.pop().instr).toEqual([ "MUL" ]);
         });
       });
     });
@@ -137,7 +137,7 @@ describe("SimpleScript", function() {
         });
 
         it("instructs to pop the stacked value into the local segment with the correct index", function() {
-          expect(programm.pop()).toEqual(["POP", "local", 0]);
+          expect(programm.pop().instr).toEqual(["POP", "local", 0]);
         });
       });
     });

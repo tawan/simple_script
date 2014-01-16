@@ -61,8 +61,8 @@ describe("SimpleScript", function() {
         instruction_1 = [ "PUSH" , "local", 2 ];
         instruction_2 = [ "ADD" ];
         instructions = SimpleScript.createInstructionSet();
-        instructions.push(instruction_1);
-        instructions.push(instruction_2);
+        instructions.push({instr: instruction_1});
+        instructions.push({instr: instruction_2});
         subject.load(instructions);
       });
 

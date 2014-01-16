@@ -30,7 +30,7 @@ var SimpleScript = (function(my) {
       },
 
       step: function() {
-        var instruction = this.currentInstructions()[stepCounter];
+        var instruction = this.currentInstructions()[stepCounter].instr;
         if (!instruction) {
           throw "Cannot execute instruction!";
         }

@@ -26,7 +26,7 @@ var SimpleScript = (function(my) {
       number: (function() {
         var n = Object.create(node);
         n.visit = function(programm) {
-          programm.push([ "PUSH", "constant", this.nativeValue() ]);
+          programm.push({ line: this.line(), instr: [ "PUSH", "constant", this.nativeValue() ] });
         };
 
         n.nativeValue = function() {
@@ -43,7 +43,7 @@ var SimpleScript = (function(my) {
 
         n.visit = function(programm) {
           var index = programm.getIndex(this.name());
-          programm.push([ "PUSH", "local", index ]);
+          programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
         };
         return n;
       })(),
@@ -54,7 +54,7 @@ var SimpleScript = (function(my) {
           this.children().each(function(c) {
             c.visit(programm);
           });
-          programm.push([ "ADD" ]);
+          programm.push({ line: this.line(), instr: [ "ADD" ] });
         };
 
         return n;
@@ -66,7 +66,7 @@ var SimpleScript = (function(my) {
           this.children().each(function(c) {
             c.visit(programm);
           });
-          programm.push([ "MUL" ]);
+          programm.push({ line: this.line(), instr: [ "MUL" ] });
         };
 
         return n;
@@ -77,7 +77,7 @@ var SimpleScript = (function(my) {
         n.visit = function(programm) {
           this.children()[1].visit(programm);
           var index = programm.getIndex(this.children()[0].name());
-          programm.push([ "POP", "local", index ]);
+          programm.push({ line: this.line(), instr: [ "POP", "local", index ] });
         };
 
         return n;
