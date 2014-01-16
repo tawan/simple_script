@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Simple Script</title>
+
+  <script type="text/javascript" src="src/Enumerable.js"></script>
+  <script type="text/javascript" src="src/TreeFactory.js"></script>
+  <script type="text/javascript" src="src/TreeRenderer.js"></script>
+  <script type="text/javascript" src="src/VM.js"></script>
+  <script type="text/javascript" src="src/grammar.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+  <script src="http://localhost:8080/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <style type="text/css" media="screen">
+    #editor { 
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="editor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+    }
+  </div>
+  <script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/solarized_light");
+    editor.getSession().setMode("ace/mode/mode-plain_text");
+  </script>
+</body>
+</html>
