@@ -31,8 +31,12 @@ var SimpleScript = (function(my) {
 
       step: function() {
         var instruction = this.currentInstructions()[stepCounter].instr;
+        var line = this.currentInstructions()[stepCounter].line;
         if (!instruction) {
           throw "Cannot execute instruction!";
+        }
+        if (line && this.lineHighlighter) {
+          this.lineHighlighter(line);
         }
         this[instruction[0]](instruction[1], instruction[2]);
         stepCounter++;

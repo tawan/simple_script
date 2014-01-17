@@ -30,11 +30,10 @@
 </head>
 
 <body>
-  <div id="editor">
-    x = 2;
-    y = (1 + x) * (5 + 5);
-    x = y + 1;
-    x;
+  <div id="editor">x = 2;
+y = (1 + x) * (5 + 5);
+x = y + 1;
+x;
   </div>
   <script>
     var editor = ace.edit("editor");
@@ -45,8 +44,8 @@
     var instructions = SimpleScript.createInstructionSet();
     tree.visit(instructions);
     var vm = SimpleScript.createVM();
+    vm.lineHighlighter = function(line) { editor.gotoLine(line + 1); };
     vm.load(instructions);
-    vm.run();
   </script>
 </body>
 </html>

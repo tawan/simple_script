@@ -55,21 +55,25 @@ describe("SimpleScript", function() {
 
     describe("execution", function() {
       var instruction_1, instruction_2, instructions;
+      var line = 45;
       beforeEach(function() {
         spyOn(subject, "PUSH").and.callThrough();
         spyOn(subject, "ADD").and.callThrough();
         instruction_1 = [ "PUSH" , "local", 2 ];
         instruction_2 = [ "ADD" ];
         instructions = SimpleScript.createInstructionSet();
-        instructions.push({instr: instruction_1});
-        instructions.push({instr: instruction_2});
+        instructions.push({instr: instruction_1, line: line});
+        instructions.push({instr: instruction_2, line: line});
         subject.load(instructions);
       });
 
 
       describe("#step", function() {
+        var highlighter;
+
         beforeEach(function() {
           subject.step();
+          highlighter = jasmine.createSpy("highlighter");
         });
 
         it("executes only one instruction", function() {
@@ -82,6 +86,12 @@ describe("SimpleScript", function() {
           subject.step();
           expect(subject["ADD"]).toHaveBeenCalled();
 
+        });
+
+        it("can highlight a line", function() {
+          subject.lineHighlighter = highlighter;
+          subject.step();
+          expect(highlighter).toHaveBeenCalledWith(line);
         });
       });
 
