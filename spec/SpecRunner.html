@@ -30,18 +30,5 @@
 </head>
 
 <body>
-  <textarea id="input" cols="100" rows="10">
-    x = 2;
-    y = (1 + x) * (5 + 5);
-    x = y + 1;
-    x;
-  </textarea>
-  <div id="source" />
-
-    <script type="text/javascript">
-      var tree = grammar.parse(jQuery('#input').text());
-      SimpleScript.treeRenderer.decorate(tree);
-      SimpleScript.treeRenderer.render(tree, jQuery('#source'));
-    </script>
 </body>
 </html>
