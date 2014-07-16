@@ -10,12 +10,18 @@ module.exports = function(grunt) {
           "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"
         ]
       }
+    },
+    exec: {
+      generate_parser: {
+        cmd: 'node node_modules/jison/lib/cli.js -o src/grammar.js src/grammar.jison'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-exec');
 
-  // Default task(s).
-  grunt.registerTask('default', 'jasmine');
+  grunt.registerTask('test', [ 'exec:generate_parser', 'jasmine' ]);
+  grunt.registerTask('default', 'test');
 
 };
