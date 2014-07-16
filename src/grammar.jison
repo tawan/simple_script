@@ -7,6 +7,7 @@
 \s+                   /* skip whitespace */
 ";"                   return 'SEMI'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
+"print"               return 'PRINT'
 "while"               return 'WHILE'
 "true"                return 'TRUE'
 "false"               return 'FALSE'
@@ -75,6 +76,8 @@ stmt
         { $$ = $1; }
     | WHILE condition block
         { $$ = SimpleScript.while_loop($2, $3) ;}
+    | PRINT exp
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "print", children: [ $2 ] }); }
     ;
 
 exp

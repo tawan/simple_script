@@ -72,6 +72,18 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      print: (function() {
+        var n = Object.create(node);
+        n.visit = function(programm) {
+          this.children().each(function(c) {
+            c.visit(programm);
+          });
+          programm.push({ line: this.line(), instr: [ "PRINT" ] });
+        };
+
+        return n;
+      })(),
+
       assignment: (function() {
         var n = Object.create(node);
         n.visit = function(programm) {

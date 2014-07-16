@@ -141,6 +141,27 @@ describe("SimpleScript", function() {
         });
       });
     });
+
+    describe("Print", function() {
+      var print, expr;
+
+      beforeEach(function() {
+        expr = jasmine.createSpyObj("expr", [ "visit" ]);
+        print = SimpleScript.treeFactory.createNode({ type: "print", children: [ expr ]});
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() { print.visit(programm); });
+
+        it("visits its expression", function() {
+          expect(expr.visit).toHaveBeenCalledWith(programm);
+        });
+
+        it("instructs to print the stacked value", function() {
+          expect(programm.pop().instr).toEqual(["PRINT"]);
+        });
+      });
+    });
   });
 
   describe("treeWalker", function() {

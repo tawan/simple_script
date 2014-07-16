@@ -1,5 +1,5 @@
 var SimpleScript = (function(my) {
-  my.createVM = function() {
+  my.createVM = function(printCallback) {
     var stack = [];
 
     var memory = {
@@ -41,6 +41,8 @@ var SimpleScript = (function(my) {
         this[instruction[0]](instruction[1], instruction[2]);
         stepCounter++;
       },
+
+      printCallback: printCallback || function(value) { console.log(value) },
 
       load: function(instructions) {
         currentInstructions = instructions;
@@ -85,6 +87,16 @@ var SimpleScript = (function(my) {
       "POP": function(segment, index) {
         var value = this.stack().pop();
         this.memory()[segment].set(index, value);
+      },
+
+      "PRINT": function() {
+        if(typeof this.printCallback == 'function') {
+          var value = this.stack().pop();
+          this.printCallback(value);
+        }
+        else {
+          throw "Cannot print because no callback is set!";
+        }
       }
     };
   };

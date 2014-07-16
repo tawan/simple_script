@@ -146,6 +146,15 @@ describe("SimpleScript", function() {
         expect(subject.memory().local.get(0)).toEqual(666);
       });
     });
+
+    describe("#PRINT", function() {
+      it("pops value and invokes print callback with popped value", function() {
+        subject.stack().push(666);
+        spyOn(subject, 'printCallback');
+        subject["PRINT"]();
+        expect(subject.printCallback).toHaveBeenCalledWith(666);
+      });
+    });
   });
 
   describe("instruction set", function() {
