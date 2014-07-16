@@ -18,11 +18,23 @@ module.exports = function(grunt) {
       bower_install: {
         cmd: 'node node_modules/bower/bin/bower install'
       }
+    },
+
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          base: '.',
+          open: true,
+          keepalive: true
+      }
     }
+  }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('test', [ 'exec:generate_parser', 'exec:bower_install', 'jasmine' ]);
   grunt.registerTask('default', 'test');
