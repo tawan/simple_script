@@ -4,3 +4,4 @@
 spec/lib
 lib/ace
 node_modules
+bower_components

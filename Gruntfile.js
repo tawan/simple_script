@@ -7,13 +7,16 @@ module.exports = function(grunt) {
       options: {
         specs: 'specs/**/*Spec.js',
         vendor: [
-          "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"
+          "bower_components/jquery/dist/jquery.js"
         ]
       }
     },
     exec: {
       generate_parser: {
         cmd: 'node node_modules/jison/lib/cli.js -o src/grammar.js src/grammar.jison'
+      },
+      bower_install: {
+        cmd: 'node node_modules/bower/bin/bower install'
       }
     }
   });
@@ -21,7 +24,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-exec');
 
-  grunt.registerTask('test', [ 'exec:generate_parser', 'jasmine' ]);
+  grunt.registerTask('test', [ 'exec:generate_parser', 'exec:bower_install', 'jasmine' ]);
   grunt.registerTask('default', 'test');
 
 };
