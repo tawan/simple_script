@@ -1,0 +1,24 @@
+{
+  "name": "simple_script",
+  "version": "0.0.0",
+  "description": "SimpleScript IDE",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tawan/simple_script.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tawan/simple_script/issues"
+  },
+  "homepage": "https://github.com/tawan/simple_script",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jasmine": "^0.6.5"
+  }
+}
