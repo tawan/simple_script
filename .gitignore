@@ -3,3 +3,4 @@
 *grammar.js
 spec/lib
 lib/ace
+node_modules
