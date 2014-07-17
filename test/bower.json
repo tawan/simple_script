@@ -1,0 +1,11 @@
+{
+  "name": "simple-script",
+  "private": true,
+  "dependencies": {
+    "chai": "~1.8.0",
+    "mocha": "~1.14.0"
+  },
+  "devDependencies": {
+    "sinon": "~1.10.3"
+  }
+}

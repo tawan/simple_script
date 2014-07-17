@@ -18,7 +18,7 @@ describe("SimpleScript", function() {
       });
 
       it("has segment for local variables", function() {
-        expect(subject.local).toBeDefined();
+        expect(subject.local).to.be.defined;
       });
 
       describe("locals segment", function() {
@@ -28,12 +28,12 @@ describe("SimpleScript", function() {
 
         it("can add values", function() {
           subject.push(666)
-          expect(subject.get(0)).toBe(666);
+          expect(subject.get(0)).to.equal(666);
         });
       });
 
       it("has segment for constants", function() {
-        expect(subject.constant).toBeDefined();
+        expect(subject.constant).to.be.defined;
       });
 
       describe("constants segment", function() {
@@ -41,8 +41,8 @@ describe("SimpleScript", function() {
           subject = subject.constant;
         });
         it("is initialized with unsigned 8 bit values", function() {
-          expect(subject.get(0)).toBe(0);
-          expect(subject.get(255)).toBe(255);
+          expect(subject.get(0)).to.equal(0);
+          expect(subject.get(255)).to.equal(255);
         });
       });
     });
@@ -50,15 +50,15 @@ describe("SimpleScript", function() {
     it("can load instructions", function() {
       var instructions = {};
       subject.load(instructions);
-      expect(subject.currentInstructions()).toBe(instructions);
+      expect(subject.currentInstructions()).to.equal(instructions);
     });
 
     describe("execution", function() {
-      var instruction_1, instruction_2, instructions;
+      var instruction_1, instruction_2, instructions, pushSpy, addSpy;
       var line = 45;
       beforeEach(function() {
-        spyOn(subject, "PUSH").and.callThrough();
-        spyOn(subject, "ADD").and.callThrough();
+        pushSpy = sinon.spy(subject, "PUSH");
+        addSpy = sinon.spy(subject, "ADD");
         instruction_1 = [ "PUSH" , "local", 2 ];
         instruction_2 = [ "ADD" ];
         instructions = SimpleScript.createInstructionSet();
@@ -73,25 +73,25 @@ describe("SimpleScript", function() {
 
         beforeEach(function() {
           subject.step();
-          highlighter = jasmine.createSpy("highlighter");
+          highlighter = sinon.spy();
         });
 
         it("executes only one instruction", function() {
-          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
-          expect(subject["ADD"]).not.toHaveBeenCalled();
+          expect(pushSpy.calledWith("local", 2)).to.be.true;
+          expect(addSpy.called).to.be.not.true;
         });
 
         it("executes one instruction after the other", function() {
-          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
+          expect(pushSpy.calledWith("local", 2)).to.be.true;
           subject.step();
-          expect(subject["ADD"]).toHaveBeenCalled();
+          expect(addSpy.called).to.be.true;
 
         });
 
         it("can highlight a line", function() {
           subject.lineHighlighter = highlighter;
           subject.step();
-          expect(highlighter).toHaveBeenCalledWith(line);
+          expect(highlighter.calledWith(line)).to.be.true;
         });
       });
 
@@ -101,8 +101,8 @@ describe("SimpleScript", function() {
         });
 
         it("it executes all remaining instructions", function() {
-          expect(subject["PUSH"]).toHaveBeenCalledWith("local", 2);
-          expect(subject["ADD"]).toHaveBeenCalled();
+          expect(pushSpy.calledWith("local", 2)).to.be.true;
+          expect(addSpy.called).to.be.true;
         });
       });
     });
@@ -111,7 +111,7 @@ describe("SimpleScript", function() {
       it("pushes a value from a given segment with a given indes to the stack", function() {
         subject.memory().local.push(666);
         subject["PUSH"]("local", 0);
-        expect(subject.stack().pop()).toEqual(666);
+        expect(subject.stack().pop()).to.equal(666);
       });
     });
 
@@ -123,7 +123,7 @@ describe("SimpleScript", function() {
         subject.stack().push(left);
         subject.stack().push(right);
         subject["ADD"]();
-        expect(subject.stack().pop()).toEqual(sum);
+        expect(subject.stack().pop()).to.equal(sum);
       });
     });
 
@@ -135,7 +135,7 @@ describe("SimpleScript", function() {
         subject.stack().push(left);
         subject.stack().push(right);
         subject["MUL"]();
-        expect(subject.stack().pop()).toEqual(product);
+        expect(subject.stack().pop()).to.equal(product);
       });
     });
 
@@ -143,16 +143,16 @@ describe("SimpleScript", function() {
       it("pops value and stores it into given segment at given index", function() {
         subject.stack().push(666);
         subject["POP"]("local", 0);
-        expect(subject.memory().local.get(0)).toEqual(666);
+        expect(subject.memory().local.get(0)).to.equal(666);
       });
     });
 
     describe("#PRINT", function() {
       it("pops value and invokes print callback with popped value", function() {
         subject.stack().push(666);
-        spyOn(subject, 'printCallback');
+        var printCallbackSpy = sinon.spy(subject, 'printCallback');
         subject["PRINT"]();
-        expect(subject.printCallback).toHaveBeenCalledWith(666);
+        expect(printCallbackSpy.calledWith(666)).to.be.true;
       });
     });
   });
@@ -165,13 +165,13 @@ describe("SimpleScript", function() {
     });
 
     it("is enumerable", function() {
-      expect(subject.each).toBeDefined();
+      expect(subject.each).to.be.defined;
     });
 
     it("maps variables to indices", function() {
-      expect(subject.getIndex("x")).toBe(0);
-      expect(subject.getIndex("y")).toBe(1);
-      expect(subject.getIndex("x")).toBe(0);
+      expect(subject.getIndex("x")).to.equal(0);
+      expect(subject.getIndex("y")).to.equal(1);
+      expect(subject.getIndex("x")).to.equal(0);
     });
   });
 });

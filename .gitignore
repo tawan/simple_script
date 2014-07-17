@@ -1,7 +1,9 @@
 *.swp
 *.DS_Store
 *grammar.js
-spec/lib
-lib/ace
-node_modules
+dist
+.tmp
+.sass-cache
+test/bower_components
 bower_components
+node_modules

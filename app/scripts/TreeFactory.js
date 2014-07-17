@@ -15,9 +15,7 @@ var SimpleScript = (function(my) {
 
       line: function() {
         return this._line;
-      },
-
-      isNode: true
+      }
     };
 
     var nodeTypes = {
