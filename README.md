@@ -7,8 +7,7 @@ then in your console
 ```
 npm install
 sudo npm install grunt-cli -g
-grunt exec:bower_install
-grunt exec:boser_test_install    
+grunt setup
 ```
 
 Testing

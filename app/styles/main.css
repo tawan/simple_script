@@ -87,3 +87,8 @@ body {
         border-bottom: 0;
     }
 }
+
+#editor { 
+  position: relative;
+  height: 300px;
+}

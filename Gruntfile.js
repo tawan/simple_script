@@ -319,6 +319,10 @@ module.exports = function (grunt) {
           bower_test_install: {
             cmd: 'node ../node_modules/bower/bin/bower install',
             cwd: 'test'
+          },
+          build_ace: {
+            cmd: 'npm install && node Makefile.dryice.js',
+            cwd: 'bower_components/ace'
           }
         }
     });
@@ -376,5 +380,14 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'test',
         'build'
+    ]);
+
+    grunt.registerTask('setup', [
+        'exec:bower_install',
+        'exec:bower_test_install',
+        'exec:build_ace',
+        'exec:generate_parser',
+        'test',
+        'serve:dist'
     ]);
 };
