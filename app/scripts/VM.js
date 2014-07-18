@@ -5,10 +5,12 @@ var SimpleScript = (function(my) {
     var memory = {
       local: (function() {
         var storage = [];
+        for (var i = 0; i < 10; i++) {
+          storage.push(null);
+        };
 
         return {
           get: function(index) { return storage[index]; },
-          push: function(item) { storage.push(item); },
           set:  function(index, item) { storage[index] = item; }
         };
       })(),

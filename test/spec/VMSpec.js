@@ -27,8 +27,14 @@ describe("SimpleScript", function() {
         });
 
         it("can add values", function() {
-          subject.push(666)
+          subject.set(0, 666)
           expect(subject.get(0)).to.equal(666);
+        });
+
+        it("initializes with 10 null entries", function() {
+          for(var i = 0; i < 10; i++) {
+            expect(subject.get(i)).to.be.null;
+          };
         });
       });
 
@@ -108,8 +114,8 @@ describe("SimpleScript", function() {
     });
 
     describe("#PUSH", function() {
-      it("pushes a value from a given segment with a given indes to the stack", function() {
-        subject.memory().local.push(666);
+      it("pushes a value from a given segment with a given index to the stack", function() {
+        subject.memory().local.set(0, 666);
         subject["PUSH"]("local", 0);
         expect(subject.stack().pop()).to.equal(666);
       });
