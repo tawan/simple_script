@@ -64,7 +64,32 @@ module.exports = function (grunt) {
                     '.tmp/styles/{,*/}*.css',
                     '<%= config.app %>/images/{,*/}*'
                 ]
+            },
+            handlebars: {
+              files: [
+                '<%= config.app %>/{,*/}*.hbs',
+              ],
+              tasks: [ 'handlebars' ]
             }
+        },
+        handlebars: {
+          compile: {
+            files: {
+              ".tmp/scripts/compiled-templates.js": [
+                "app/templates/**/*.hbs"
+                ]
+            },
+            options: {
+              namespace: 'SimpleScript.Templates',
+              wrapped: true, 
+              processName: function(filename) {
+                // funky name processing here
+                return filename
+                  .replace(/^app\/templates\//, '')
+                  .replace(/\.hbs$/, '');
+              }
+            }
+          }
         },
 
         // The actual grunt server settings
@@ -323,6 +348,10 @@ module.exports = function (grunt) {
           build_ace: {
             cmd: 'npm install && node Makefile.dryice.js',
             cwd: 'bower_components/ace'
+          },
+          build_handlebars: {
+            cmd: 'npm install && grunt build',
+            cwd: 'bower_components/handlebars-wycats'
           }
         }
     });
@@ -336,6 +365,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:server',
             'concurrent:server',
+            'handlebars',
             'autoprefixer',
             'connect:livereload',
             'watch'
@@ -351,12 +381,14 @@ module.exports = function (grunt) {
         if (target !== 'watch') {
             grunt.task.run([
                 'clean:server',
+                'handlebars',
                 'concurrent:test',
                 'autoprefixer'
             ]);
         }
 
         grunt.task.run([
+            'handlebars',
             'connect:test',
             'mocha'
         ]);
@@ -365,6 +397,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'exec:generate_parser',
         'clean:dist',
+        'handlebars',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
@@ -386,6 +419,7 @@ module.exports = function (grunt) {
         'exec:bower_install',
         'exec:bower_test_install',
         'exec:build_ace',
+        'exec:build_handlebars',
         'exec:generate_parser',
         'test',
         'serve:dist'
