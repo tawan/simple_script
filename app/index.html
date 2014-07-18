@@ -43,6 +43,9 @@
             <div class="btn-group">
               <button id="execute-btn" type="button" class="btn btn-default">Execute</button>
             </div>
+            <div id="memory">
+
+            </div>
             <div class="footer">
                 <p><span class="glyphicon glyphicon-heart"></span> by Tawan</p>
             </div>
@@ -99,7 +102,9 @@
                 vm.lineHighlighter = function(line) { editor.gotoLine(line + 1); };
                 vm.load(instructions);
                 vm.run();
+                jQuery('#memory').html(SimpleScript.Templates.memory({memory: vm.memory()['local'] })); 
             });
+
        </script>
 </body>
 </html>

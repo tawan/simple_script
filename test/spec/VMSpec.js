@@ -27,13 +27,13 @@ describe("SimpleScript", function() {
         });
 
         it("can add values", function() {
-          subject.set(0, 666)
-          expect(subject.get(0)).to.equal(666);
+          subject[0] =  666;
+          expect(subject[0]).to.equal(666);
         });
 
         it("initializes with 10 null entries", function() {
           for(var i = 0; i < 10; i++) {
-            expect(subject.get(i)).to.be.null;
+            expect(subject[i]).to.be.null;
           };
         });
       });
@@ -47,8 +47,8 @@ describe("SimpleScript", function() {
           subject = subject.constant;
         });
         it("is initialized with unsigned 8 bit values", function() {
-          expect(subject.get(0)).to.equal(0);
-          expect(subject.get(255)).to.equal(255);
+          expect(subject[0]).to.equal(0);
+          expect(subject[255]).to.equal(255);
         });
       });
     });
@@ -115,7 +115,7 @@ describe("SimpleScript", function() {
 
     describe("#PUSH", function() {
       it("pushes a value from a given segment with a given index to the stack", function() {
-        subject.memory().local.set(0, 666);
+        subject.memory().local[0] =  666;
         subject["PUSH"]("local", 0);
         expect(subject.stack().pop()).to.equal(666);
       });
@@ -149,7 +149,7 @@ describe("SimpleScript", function() {
       it("pops value and stores it into given segment at given index", function() {
         subject.stack().push(666);
         subject["POP"]("local", 0);
-        expect(subject.memory().local.get(0)).to.equal(666);
+        expect(subject.memory().local[0]).to.equal(666);
       });
     });
 

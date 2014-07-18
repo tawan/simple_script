@@ -9,16 +9,17 @@ var SimpleScript = (function(my) {
           storage.push(null);
         };
 
-        return {
-          get: function(index) { return storage[index]; },
-          set:  function(index, item) { storage[index] = item; }
-        };
+        return storage;
       })(),
 
-      constant: {
-        get: function(index) { return index; },
-        push: function() { throw "Can't push to constant segment"; }
-      }
+      constant: (function() {
+        var storage = [];
+        for (var i = 0; i < 256; i++) {
+          storage.push(i);
+        };
+
+        return storage;
+      })()
     };
 
     var stepCounter = 0;
@@ -70,7 +71,7 @@ var SimpleScript = (function(my) {
       },
 
       "PUSH": function(segment, index) {
-        var value = this.memory()[segment].get(index);
+        var value = this.memory()[segment][index];
         this.stack().push(value);
       },
 
@@ -88,7 +89,7 @@ var SimpleScript = (function(my) {
 
       "POP": function(segment, index) {
         var value = this.stack().pop();
-        this.memory()[segment].set(index, value);
+        this.memory()[segment][index] =  value;
       },
 
       "PRINT": function() {
