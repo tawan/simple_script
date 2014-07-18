@@ -32,8 +32,7 @@
                 <h3 class="text-muted">SimpleScript</h3>
             </div>
 
-            <div id="editor">
-              x = 5;
+            <div id="editor">x = 5;
             </div>
             <div>
               <textarea id="console">
@@ -41,7 +40,8 @@
               </textarea>
             </div>
             <div class="btn-group">
-              <button id="execute-btn" type="button" class="btn btn-default">Execute</button>
+              <button id="execute-btn" type="button" class="btn btn-default">Run</button>
+              <button id="step-btn" type="button" class="btn btn-default">Step</button>
             </div>
             <div id="memory">
 
@@ -89,19 +89,36 @@
         <!-- endbuild -->
 
         <script>
+            var tree, instructions, vm;
+            var init = function() {
+              try {
+                tree = grammar.parse(editor.getValue());
+              }
+              catch(e) {
+                return;
+              };
+              instructions = SimpleScript.createInstructionSet();
+              tree.visit(instructions);
+              vm = SimpleScript.createVM(function(output){
+                jQuery("#console").val(output); 
+              });
+              vm.lineHighlighter = function(line) { editor.gotoLine(line + 1); };
+              vm.load(instructions);
+            }
             var editor = ace.edit("editor");
             editor.setTheme("ace/theme/solarized_light");
             editor.getSession().setMode("ace/mode/mode-plain_text");
+            init();
+            editor.getSession().on('change', function(){
+                init();
+            });
             jQuery('#execute-btn').click(function() {
-                var tree = grammar.parse(editor.getValue());
-                var instructions = SimpleScript.createInstructionSet();
-                tree.visit(instructions);
-                var vm = SimpleScript.createVM(function(output){
-                  jQuery("#console").val(output); 
-                });
-                vm.lineHighlighter = function(line) { editor.gotoLine(line + 1); };
-                vm.load(instructions);
                 vm.run();
+                jQuery('#memory').html(SimpleScript.Templates.memory({memory: vm.memory()['local'] })); 
+            });
+
+            jQuery('#step-btn').click(function() {
+                vm.step();
                 jQuery('#memory').html(SimpleScript.Templates.memory({memory: vm.memory()['local'] })); 
             });
 

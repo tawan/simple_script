@@ -38,7 +38,7 @@ var SimpleScript = (function(my) {
         if (!instruction) {
           throw "Cannot execute instruction!";
         }
-        if (line && this.lineHighlighter) {
+        if (typeof line === 'number' && this.lineHighlighter) {
           this.lineHighlighter(line);
         }
         this[instruction[0]](instruction[1], instruction[2]);
