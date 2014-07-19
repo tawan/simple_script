@@ -15,6 +15,14 @@ var SimpleScript = (function(my) {
 
       line: function() {
         return this._line;
+      },
+
+      firstColumn: function() {
+        return this._firstColumn
+      },
+
+      lastColumn: function() {
+        return this._lastColumn
       }
     };
 
@@ -103,6 +111,8 @@ var SimpleScript = (function(my) {
         newNode._children = my.createEnumerable(spec.children);
         newNode._value = spec.value;
         newNode._line = spec.line;
+        newNode._firstColumn = spec.firstColumn;
+        newNode._lastColumn = spec.lastColumn;
         return newNode;
       }
     };

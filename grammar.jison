@@ -69,26 +69,26 @@ stmt_list
 stmt
     : IDENT '=' exp
         {
-          var ident = SimpleScript.treeFactory.createNode({ line: yylineno, type: "ident", value: $1 });
-          $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "assignment", children: [ ident, $3 ]});
+          var ident = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 });
+          $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "assignment", children: [ ident, $3 ]});
         }
     | exp
         { $$ = $1; }
     | WHILE condition block
         { $$ = SimpleScript.while_loop($2, $3) ;}
     | PRINT exp
-      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "print", children: [ $2 ] }); }
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "print", children: [ $2 ] }); }
     ;
 
 exp
     : '(' exp ')'
         { $$ = $2;  }
     | exp '+' exp
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "addition", children: [ $1, $3 ]}); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "addition", children: [ $1, $3 ]}); }
     | exp '*' exp
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "multiplication", children: [ $1, $3 ]}); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "multiplication", children: [ $1, $3 ]}); }
     | NUMBER
-        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "number", value: $1 });}
+        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
     | IDENT
-        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, type: "ident", value: $1 });}
+        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 });}
     ;

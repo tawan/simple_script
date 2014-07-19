@@ -19,6 +19,16 @@ describe("SimpleScript", function() {
         expect(node.line()).to.equal(44);
       });
 
+      it("has a first column", function() {
+        var node = SimpleScript.treeFactory.createNode({ firstColumn: 1 });
+        expect(node.firstColumn()).to.equal(1);
+      });
+
+      it("has a last column", function() {
+        var node = SimpleScript.treeFactory.createNode({ lastColumn: 1 });
+        expect(node.lastColumn()).to.equal(1);
+      });
+
       describe("constructor", function() {
         it("children property of given argument become nodes children", function() {
           var first_child = SimpleScript.treeFactory.createNode();
