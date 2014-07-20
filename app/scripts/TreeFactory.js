@@ -11,6 +11,7 @@ var SimpleScript = (function(my) {
 
       visit: function(programm) {
         this.children().each(function(child) { child.visit(programm); });
+        this.pushToStack(programm);
       },
 
       line: function() {
@@ -23,6 +24,10 @@ var SimpleScript = (function(my) {
 
       lastColumn: function() {
         return this._lastColumn
+      },
+
+      pushToStack: function(programm) {
+        // implement in node types
       }
     };
 
@@ -31,7 +36,7 @@ var SimpleScript = (function(my) {
 
       number: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
+        n.pushToStack = function(programm) {
           programm.push({ line: this.line(), instr: [ "PUSH", "constant", this.nativeValue() ] });
         };
 
@@ -51,15 +56,13 @@ var SimpleScript = (function(my) {
           var index = programm.getIndex(this.name());
           programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
         };
+
         return n;
       })(),
 
       addition: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
-          this.children().each(function(c) {
-            c.visit(programm);
-          });
+        n.pushToStack = function(programm) {
           programm.push({ line: this.line(), instr: [ "ADD" ] });
         };
 
@@ -68,10 +71,7 @@ var SimpleScript = (function(my) {
 
       multiplication: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
-          this.children().each(function(c) {
-            c.visit(programm);
-          });
+        n.pushToStack = function(programm) {
           programm.push({ line: this.line(), instr: [ "MUL" ] });
         };
 
@@ -80,10 +80,7 @@ var SimpleScript = (function(my) {
 
       print: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
-          this.children().each(function(c) {
-            c.visit(programm);
-          });
+        n.pushToStack = function(programm) {
           programm.push({ line: this.line(), instr: [ "PRINT" ] });
         };
 
