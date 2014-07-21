@@ -45,7 +45,7 @@ var SimpleScript = (function(my) {
         stepCounter++;
       },
 
-      printCallback: printCallback || function(value) { console.log(value) },
+      printCallback: (printCallback || function(value) { console.log(value) }),
 
       load: function(instructions) {
         currentInstructions = instructions;

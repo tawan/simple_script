@@ -78,6 +78,51 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      lower: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "LOWER" ] });
+        };
+
+        return n;
+      })(),
+
+      equals: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "EQUALS" ] });
+        };
+
+        return n;
+      })(),
+
+      whileLoop: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "WHILE" ] });
+        };
+
+        return n;
+      })(),
+
+      isnot: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "ISNOT" ] });
+        };
+
+        return n;
+      })(),
+
+      greater: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "GREATER" ] });
+        };
+
+        return n;
+      })(),
+
       print: (function() {
         var n = Object.create(node);
         n.pushToStack = function(programm) {

@@ -46,17 +46,17 @@ block
 
 condition
     : exp EQUALS exp
-        { $$ = SimpleScript.equals($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "equals", children: [ $1, $3 ] }); }
     | exp ISNOT exp
-        { $$ = SimpleScript.isnot($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "isnot", children: [ $1, $3 ] }); }
     | exp GRT exp
-        { $$ = SimpleScript.greater($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "greater", children: [ $1, $3 ] }); }
     | exp LGT exp
-        { $$ = SimpleScript.lower($1, $3); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "lower", children: [ $1, $3 ] }); }
     | TRUE
-        { $$ = SimpleScript.boolean(true); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "nativeTrue", children: [] }); }
     | FALSE
-        { $$ = SimpleScript.boolean(false); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "nativeFalse", children: [] }); }
     ;
 
 stmt_list
@@ -74,7 +74,7 @@ stmt
     | exp
         { $$ = $1; }
     | WHILE condition block
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "while", children: [ $2 ] }); }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "whileLoop", children: [ $2, $3 ] }); }
     | PRINT exp
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "print", children: [ $2 ] }); }
     ;

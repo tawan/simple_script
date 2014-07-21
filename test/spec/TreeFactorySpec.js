@@ -130,6 +130,90 @@ describe("SimpleScript", function() {
           });
         });
       });
+
+      describe("greater", function() {
+        var greater;
+
+        beforeEach(function() {
+          greater = SimpleScript.treeFactory.createNode({ type: "greater", children: [ left, right ] });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() { greater.visit(programm); });
+
+          it("visits its children", function() {
+            expect(leftSpy.calledWith(programm)).to.be.true;
+            expect(rightSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("compares with greater", function() {
+            expect(programm.pop().instr).to.deep.equal([ "GREATER" ]);
+          });
+        });
+      });
+
+      describe("lower", function() {
+        var lower;
+
+        beforeEach(function() {
+          lower = SimpleScript.treeFactory.createNode({ type: "lower", children: [ left, right ] });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() { lower.visit(programm); });
+
+          it("visits its children", function() {
+            expect(leftSpy.calledWith(programm)).to.be.true;
+            expect(rightSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("compares with lower", function() {
+            expect(programm.pop().instr).to.deep.equal([ "LOWER" ]);
+          });
+        });
+      });
+
+      describe("equals", function() {
+        var equals;
+
+        beforeEach(function() {
+          equals = SimpleScript.treeFactory.createNode({ type: "equals", children: [ left, right ] });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() { equals.visit(programm); });
+
+          it("visits its children", function() {
+            expect(leftSpy.calledWith(programm)).to.be.true;
+            expect(rightSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("compares with equals", function() {
+            expect(programm.pop().instr).to.deep.equal([ "EQUALS" ]);
+          });
+        });
+      });
+
+      describe("isnot", function() {
+        var isnot;
+
+        beforeEach(function() {
+          isnot = SimpleScript.treeFactory.createNode({ type: "isnot", children: [ left, right ] });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() { isnot.visit(programm); });
+
+          it("visits its children", function() {
+            expect(leftSpy.calledWith(programm)).to.be.true;
+            expect(rightSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("compares with isnot", function() {
+            expect(programm.pop().instr).to.deep.equal([ "ISNOT" ]);
+          });
+        });
+      });
     });
 
     describe("Assignment", function() {
@@ -174,6 +258,30 @@ describe("SimpleScript", function() {
 
         it("instructs to print the stacked value", function() {
           expect(programm.pop().instr).to.deep.equal(["PRINT"]);
+        });
+      });
+    });
+
+    describe("while loop", function() {
+      var whileLoop, condition, block;
+
+      beforeEach(function() {
+        condition = { visit: function(programm) {} };
+        block = { visit: function(programm) {} };
+        conditionSpy = sinon.spy(condition, "visit");
+        blockSpy = sinon.spy(block, "visit");
+        whileLoop = SimpleScript.treeFactory.createNode({ type: "whileLoop", children: [ condition, block ]});
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() {whileLoop.visit(programm); });
+
+        it("visits its condition", function() {
+          expect(conditionSpy.calledWith(programm)).to.be.true;
+        });
+
+        it("visits its block", function() {
+          expect(blockSpy.calledWith(programm)).to.be.true;
         });
       });
     });
