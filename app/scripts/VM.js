@@ -22,7 +22,8 @@ var SimpleScript = (function(my) {
       })()
     };
 
-    var stepCounter = 0;
+    var stackPointer = 0;
+    var labelCount = 0;
     var currentInstructions;
 
     return {
@@ -33,8 +34,8 @@ var SimpleScript = (function(my) {
       },
 
       step: function() {
-        var instruction = this.currentInstructions()[stepCounter].instr;
-        var line = this.currentInstructions()[stepCounter].line;
+        var instruction = this.currentInstructions()[stackPointer].instr;
+        var line = this.currentInstructions()[stackPointer].line;
         if (!instruction) {
           throw "Cannot execute instruction!";
         }
@@ -42,7 +43,7 @@ var SimpleScript = (function(my) {
           this.lineHighlighter(line);
         }
         this[instruction[0]](instruction[1], instruction[2]);
-        stepCounter++;
+        stackPointer++;
       },
 
       printCallback: (printCallback || function(value) { console.log(value) }),
@@ -59,11 +60,15 @@ var SimpleScript = (function(my) {
       },
 
       hasPendingInstructions: function() {
-        return stepCounter < this.currentInstructions().length;
+        return stackPointer < this.currentInstructions().length;
       },
 
       stack: function() {
         return stack;
+      },
+
+      createLabel: function() {
+        return labelCount++;
       },
 
       memory: function() {
@@ -92,6 +97,59 @@ var SimpleScript = (function(my) {
         this.memory()[segment][index] =  value;
       },
 
+      "EQUALS": function() {
+        var left = this.stack().pop();
+        var right = this.stack().pop();
+        this.stack().push(left == right);
+      },
+
+      "ISNOT": function() {
+        var left = this.stack().pop();
+        var right = this.stack().pop();
+        this.stack().push(left != right);
+      },
+
+      "GREATER": function() {
+        var left = this.stack().pop();
+        var right = this.stack().pop();
+        this.stack().push(left > right);
+      },
+
+      "LOWER": function() {
+        var left = this.stack().pop();
+        var right = this.stack().pop();
+        this.stack().push(left < right);
+      },
+
+      "JUMP_ON_TRUE": function(label, direction) {
+        if(!stack.pop()) {
+          return;
+        }
+        var instr;
+        var found = false;
+        while(stackPointer < this.currentInstructions().length && stackPointer >= 0) {
+          instr = this.currentInstructions()[stackPointer].instr;
+          if(instr[0] == 'LABEL' && instr[1] == label) {
+            found = true;
+            break;
+          };
+          if(direction == 'f') {
+            stackPointer++;
+          }
+          else if(direction == 'b') {
+            stackPointer--;
+          }
+        }
+
+        if(!found) {
+          throw "Label not found";
+        };
+      },
+
+      "LABEL": function(label) {
+        //do nothing
+      },
+
       "PRINT": function() {
         if(typeof this.printCallback == 'function') {
           var value = this.stack().pop();
@@ -100,6 +158,9 @@ var SimpleScript = (function(my) {
         else {
           throw "Cannot print because no callback is set!";
         }
+      },
+      stackPointer: function() {
+        return stackPointer;
       }
     };
   };
