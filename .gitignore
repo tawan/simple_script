@@ -1,4 +1,6 @@
 *.swp
+*.ftppass
+sftpCache.json
 *.DS_Store
 *grammar.js
 dist
