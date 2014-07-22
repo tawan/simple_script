@@ -41,7 +41,7 @@ expressions
 
 block
     : '{' stmt_list '}'
-        { $$ = $2 ; }
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column ,children: $2 }) ;}
     ;
 
 condition
@@ -73,8 +73,8 @@ stmt
         }
     | exp
         { $$ = $1; }
-    | WHILE condition block
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "whileLoop", children: [ $2, $3 ] }); }
+    | WHILE '('condition')' block
+        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "whileLoop", children: [ $3, $5 ] }); }
     | PRINT exp
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "print", children: [ $2 ] }); }
     ;

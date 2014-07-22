@@ -150,11 +150,11 @@ describe("SimpleScript", function() {
         subject.stack().push(3);
         subject.stack().push(3);
         subject["EQUALS"]();
-        expect(subject.stack().pop()).to.be.true;
+        expect(subject.stack().pop()).to.equal(1);
         subject.stack().push(3);
         subject.stack().push(4);
         subject["EQUALS"]();
-        expect(subject.stack().pop()).to.be.false;
+        expect(subject.stack().pop()).to.equal(0);
       });
     });
 
@@ -163,37 +163,37 @@ describe("SimpleScript", function() {
         subject.stack().push(3);
         subject.stack().push(4);
         subject["ISNOT"]();
-        expect(subject.stack().pop()).to.be.true;
+        expect(subject.stack().pop()).to.equal(1);
         subject.stack().push(3);
         subject.stack().push(3);
         subject["ISNOT"]();
-        expect(subject.stack().pop()).to.be.false;
+        expect(subject.stack().pop()).to.equal(0);
       });
     });
 
     describe("#GREATER", function() {
       it("pops two values and compares on equality", function() {
-        subject.stack().push(4);
-        subject.stack().push(5);
-        subject["GREATER"]();
-        expect(subject.stack().pop()).to.be.true;
         subject.stack().push(5);
         subject.stack().push(4);
         subject["GREATER"]();
-        expect(subject.stack().pop()).to.be.false;
+        expect(subject.stack().pop()).to.equal(1);
+        subject.stack().push(4);
+        subject.stack().push(5);
+        subject["GREATER"]();
+        expect(subject.stack().pop()).to.equal(0);
       });
     });
 
     describe("#LOWER", function() {
       it("pops two values and compares on equality", function() {
-        subject.stack().push(4);
-        subject.stack().push(5);
-        subject["LOWER"]();
-        expect(subject.stack().pop()).to.be.false;
         subject.stack().push(5);
         subject.stack().push(4);
         subject["LOWER"]();
-        expect(subject.stack().pop()).to.be.true;
+        expect(subject.stack().pop()).to.equal(0);
+        subject.stack().push(4);
+        subject.stack().push(5);
+        subject["LOWER"]();
+        expect(subject.stack().pop()).to.equal(1);
       });
     });
 
@@ -208,7 +208,7 @@ describe("SimpleScript", function() {
     describe("#JUMP_ON_TRUE", function() {
       it("jumps to given label when true popped and continues execution", function() {
         instructions = SimpleScript.createInstructionSet();
-        var label = subject.createLabel();
+        var label = instructions.createLabel();
         instructions.push({instr: [ "PUSH" , "constant", 2 ]});
         instructions.push({instr: [ "PUSH" , "constant", 1 ]});
         instructions.push({instr: [ "JUMP_ON_TRUE" , label, 'f' ]});
@@ -218,7 +218,7 @@ describe("SimpleScript", function() {
         instructions.push({instr: [ "EQUALS" ]});
         subject.load(instructions);
         subject.run();
-        expect(subject.stack().pop()).to.be.true;
+        expect(subject.stack().pop()).to.equal(1);
       });
     });
 

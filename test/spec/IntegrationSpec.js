@@ -15,4 +15,21 @@ describe("SimpleScript", function() {
       expect(vm.stack().pop()).to.equal(31);
     });
   });
+
+  describe("program with while loops", function() {
+    var programm = "x = 0; y = 0; while (x < 5) { x = x + 1; while (y < 100) { y = y + x; }; }; x + y;"
+    var tree;
+    beforeEach(function() {
+      tree = grammar.parse(programm);
+    });
+
+    it("performs correctly", function() {
+      var instructions = SimpleScript.createInstructionSet();
+      tree.visit(instructions);
+      var vm = SimpleScript.createVM();
+      vm.load(instructions);
+      vm.run();
+      expect(vm.stack().pop()).to.equal(105);
+    });
+  });
 });

@@ -98,8 +98,18 @@ var SimpleScript = (function(my) {
 
       whileLoop: (function() {
         var n = Object.create(node);
-        n.pushToStack = function(programm) {
-          programm.push({ line: this.line(), instr: [ "WHILE" ] });
+        n.visit = function(programm) {
+          var end_label = programm.createLabel();
+          var begin_label = programm.createLabel();
+          this.children()[0].visit(programm);
+          programm.push({ line: this.line(), instr: [ "PUSH", 'constant', 0 ] });
+          programm.push({ line: this.line(), instr: [ "EQUALS" ] });
+          programm.push({ line: this.line(), instr: [ "JUMP_ON_TRUE", end_label, 'f' ] });
+          programm.push({ line: this.line(), instr: [ "LABEL", begin_label ] });
+          this.children()[1].visit(programm);
+          this.children()[0].visit(programm);
+          programm.push({ line: this.line(), instr: [ "JUMP_ON_TRUE", begin_label, 'b' ] });
+          programm.push({ line: this.line(), instr: [ "LABEL", end_label ] });
         };
 
         return n;

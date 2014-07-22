@@ -23,7 +23,6 @@ var SimpleScript = (function(my) {
     };
 
     var stackPointer = 0;
-    var labelCount = 0;
     var currentInstructions;
 
     return {
@@ -67,10 +66,6 @@ var SimpleScript = (function(my) {
         return stack;
       },
 
-      createLabel: function() {
-        return labelCount++;
-      },
-
       memory: function() {
         return memory;
       },
@@ -81,14 +76,14 @@ var SimpleScript = (function(my) {
       },
 
       "ADD": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
+        var left = this.stack().pop();
         this.stack().push(left + right);
       },
 
       "MUL": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
+        var left = this.stack().pop();
         this.stack().push(left * right);
       },
 
@@ -98,27 +93,27 @@ var SimpleScript = (function(my) {
       },
 
       "EQUALS": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
-        this.stack().push(left == right);
+        var left = this.stack().pop();
+        this.stack().push(left == right ? 1 : 0);
       },
 
       "ISNOT": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
-        this.stack().push(left != right);
+        var left = this.stack().pop();
+        this.stack().push(left != right ? 1 : 0);
       },
 
       "GREATER": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
-        this.stack().push(left > right);
+        var left = this.stack().pop();
+        this.stack().push(left > right ? 1 : 0);
       },
 
       "LOWER": function() {
-        var left = this.stack().pop();
         var right = this.stack().pop();
-        this.stack().push(left < right);
+        var left = this.stack().pop();
+        this.stack().push(left < right ? 1 : 0);
       },
 
       "JUMP_ON_TRUE": function(label, direction) {
@@ -169,6 +164,7 @@ var SimpleScript = (function(my) {
     var set = my.createEnumerable();
     var variablesCount = 0;
     var variablesIndexMapping = {};
+    var labelCount = 0;
 
     set.getIndex = function(variable) {
       if ( typeof variablesIndexMapping[variable] === 'undefined') {
@@ -178,6 +174,10 @@ var SimpleScript = (function(my) {
 
       return variablesIndexMapping[variable];
     };
+    set.createLabel = function() {
+        return labelCount++;
+    };
+
 
     return set;
   };
