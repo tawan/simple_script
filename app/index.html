@@ -32,20 +32,7 @@
                 <h3 class="text-muted">SimpleScript</h3>
             </div>
 
-            <div id="editor"><pre>
-x = 0;
-z = 1;
-while(x < 7) {
-  x = x + 1;
-  y = 1;
-  while(y < 3) {
-    z = z * y;
-    y = y + 1;
-  };
-};
-
-print z;
-</pre>
+            <div id="editor">
             </div>
             <div>
               <textarea id="console">
@@ -70,6 +57,8 @@ print z;
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/ace/build/src/ace.js"></script>
+        <script src="../bower_components/ace/build/src/theme-solarized_light.js"></script>
+        <script src="../bower_components/ace/build/src/mode-plain_text.js"></script>
         <script src="../bower_components/handlebars-wycats/dist/handlebars.runtime.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
@@ -121,6 +110,7 @@ print z;
             var editor = ace.edit("editor");
             editor.setTheme("ace/theme/solarized_light");
             editor.getSession().setMode("ace/mode/mode-plain_text");
+            editor.getSession().setValue(SimpleScript.Templates.default_script());
             init();
             editor.getSession().on('change', function(){
                 init();

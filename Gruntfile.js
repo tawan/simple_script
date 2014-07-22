@@ -353,6 +353,22 @@ module.exports = function (grunt) {
             cmd: 'npm install && grunt build',
             cwd: 'bower_components/handlebars-wycats'
           }
+        },
+        'sftp-deploy': {
+          build: {
+            auth: {
+              host: 'sierek.com',
+              port: 22,
+              authKey: 'key1'
+            },
+            cache: 'sftpCache.json',
+            src: 'dist',
+            dest: '/',
+            exclusions: ['dist/**/.DS_Store', '/path/to/source/folder/**/Thumbs.db', 'dist/tmp'],
+            serverSep: '/',
+            concurrency: 4,
+            progress: true
+          }
         }
     });
 
