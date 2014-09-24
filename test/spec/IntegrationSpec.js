@@ -1,6 +1,6 @@
 describe("SimpleScript", function() {
   describe("simple program", function() {
-    var programm = "x = 2; y = (1 + x) * (5 + 5); x = y + 1; x;";
+    var programm = "read x; y = (1 + x) * (5 + 5); x = y + 1; x;";
     var tree;
     beforeEach(function() {
       tree = grammar.parse(programm);
@@ -9,7 +9,7 @@ describe("SimpleScript", function() {
     it("performs correctly", function() {
       var instructions = SimpleScript.createInstructionSet();
       tree.visit(instructions);
-      var vm = SimpleScript.createVM();
+      var vm = SimpleScript.createVM(function() {return 2;});
       vm.load(instructions);
       vm.run();
       expect(vm.stack().pop()).to.equal(31);

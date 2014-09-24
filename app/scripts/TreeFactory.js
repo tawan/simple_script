@@ -142,6 +142,16 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      read: (function() {
+        var n = Object.create(node);
+        n.visit = function(programm) {
+          var index = programm.getIndex(this.children()[0].name());
+          programm.push({ line: this.line(), instr: [ "READ", "local", index ] });
+        };
+
+        return n;
+      })(),
+
       assignment: (function() {
         var n = Object.create(node);
         n.visit = function(programm) {

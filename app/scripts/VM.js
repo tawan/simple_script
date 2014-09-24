@@ -1,5 +1,5 @@
 var SimpleScript = (function(my) {
-  my.createVM = function(printCallback) {
+  my.createVM = function(readCallback, printCallback) {
     var stack = [];
 
     var memory = {
@@ -46,6 +46,7 @@ var SimpleScript = (function(my) {
       },
 
       printCallback: (printCallback || function(value) { console.log(value) }),
+      readCallback: (readCallback || function() { return "no read callback"; }),
 
       load: function(instructions) {
         currentInstructions = instructions;
@@ -143,6 +144,18 @@ var SimpleScript = (function(my) {
 
       "LABEL": function(label) {
         //do nothing
+      },
+
+      "READ": function(segment, index) {
+        if(typeof this.readCallback == 'function') {
+            this.memory()[segment][index] =  this.readCallback();
+        }
+        else {
+          throw "Cannot read because no callback is set!";
+        }
+      },
+      stackPointer: function() {
+        return stackPointer;
       },
 
       "PRINT": function() {

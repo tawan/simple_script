@@ -240,6 +240,24 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("Read", function() {
+      var read, ident;
+      var name = "x";
+
+      beforeEach(function() {
+        ident = { name: function() { return name; } };
+        read = SimpleScript.treeFactory.createNode({ type: "read", children: [ ident ]});
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() { read.visit(programm); });
+
+        it("instructs to read into the local segment with the correct index", function() {
+          expect(programm.pop().instr).to.deep.equal(["READ", "local", 0]);
+        });
+      });
+    });
+
     describe("Print", function() {
       var print, expr;
 

@@ -8,6 +8,7 @@
 ";"                   return 'SEMI'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
 "print"               return 'PRINT'
+"read"                return 'READ'
 "while"               return 'WHILE'
 "true"                return 'TRUE'
 "false"               return 'FALSE'
@@ -77,6 +78,8 @@ stmt
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "whileLoop", children: [ $3, $5 ] }); }
     | PRINT exp
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "print", children: [ $2 ] }); }
+    | READ ident
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "read", children: [ $2 ] }); }
     ;
 
 exp

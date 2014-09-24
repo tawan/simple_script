@@ -235,6 +235,14 @@ describe("SimpleScript", function() {
         expect(printCallbackSpy.calledWith(666)).to.be.true;
       });
     });
+
+    describe("#READ", function() {
+      it("stores value returned by read callback into local segment", function() {
+        subject.readCallback = function() { return 666; };
+        subject["READ"]("local", 0);
+        expect(subject.memory().local[0]).to.equal(666);
+      });
+    });
   });
 
   describe("instruction set", function() {
