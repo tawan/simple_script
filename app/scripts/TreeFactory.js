@@ -46,6 +46,32 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      _char: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "PUSH", "ascii", this.nativeValue() ] });
+        };
+
+        n.nativeValue = function() {
+          return this._value.charCodeAt(0);
+        };
+        return n;
+      })(),
+
+      string: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          var charCount = this.children().length
+          var adress = programm.getIndex(null);
+          for (var i = 0; i < charCount; i++) {
+            programm.getIndex(null);
+          }
+          programm.push({ line: this.line(), instr: [ "STRING", charCount, adress ] });
+        };
+
+        return n;
+      })(),
+
       ident: (function() {
         var n = Object.create(node);
         n.name = function() {

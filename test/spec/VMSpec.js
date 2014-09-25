@@ -51,6 +51,18 @@ describe("SimpleScript", function() {
           expect(subject[255]).to.equal(255);
         });
       });
+
+      describe("ascii segment", function() {
+        beforeEach(function() {
+          subject = subject.ascii;
+        });
+
+        it("is initialized ascii chars", function() {
+          expect(subject[65]).to.equal("A");
+          expect(subject[0]).to.equal('\u0000');
+          expect(subject[127]).to.equal('\x7F');
+        });
+      });
     });
 
     it("can load instructions", function() {
@@ -236,6 +248,20 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("#STRING", function() {
+      it("pops char count and all chars and pushes adress of string", function() {
+        subject.stack().push(3);
+        subject.stack().push(2);
+        subject.stack().push(1);
+        subject["STRING"](3, 0);
+        expect(subject.memory().local[0]).to.equal(3);
+        expect(subject.memory().local[1]).to.equal(1);
+        expect(subject.memory().local[2]).to.equal(2);
+        expect(subject.memory().local[3]).to.equal(3);
+        expect(subject.stack().pop()).to.equal(0);
+      });
+    });
+
     describe("#READ", function() {
       it("stores value returned by read callback into local segment", function() {
         subject.readCallback = function() { return 666; };
@@ -260,6 +286,11 @@ describe("SimpleScript", function() {
       expect(subject.getIndex("x")).to.equal(0);
       expect(subject.getIndex("y")).to.equal(1);
       expect(subject.getIndex("x")).to.equal(0);
+    });
+
+    it("maps null to index", function() {
+      expect(subject.getIndex(null)).to.equal(0);
+      expect(subject.getIndex(null)).to.equal(1);
     });
   });
 });
