@@ -19,7 +19,7 @@
 "}"                   return '}'
 ">"                   return 'GRT'
 "<"                   return 'LGT'
-[a-z]                 return 'CHAR'
+[a-z|A-Z]             return 'CHAR'
 \$[a-z]+              return 'IDENT'
 "*"                   return '*'
 "+"                   return '+'

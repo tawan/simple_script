@@ -34,7 +34,7 @@ describe("SimpleScript", function() {
   });
 
   describe("program with string", function() {
-    var programm = "$x = 'hallo'; $y = 'b'; $y;"
+    var programm = "$x = 'Hallo'; $y = 'b'; $y;"
     var tree;
     beforeEach(function() {
       tree = grammar.parse(programm);
