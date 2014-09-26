@@ -17,3 +17,16 @@ Testing
 grunt test
 ```
 Check this out: [Learnable Programming](http://worrydream.com/LearnableProgramming)
+
+Running
+=========
+
+
+```
+grunt serve
+```
+
+Ideas
+=====
+
+Variable addresse in hex.
