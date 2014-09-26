@@ -34,7 +34,7 @@ describe("SimpleScript", function() {
   });
 
   describe("program with string", function() {
-    var programm = "$x = 'Hallo'; $y = 'b'; $y;"
+    var programm = "$x = 'AbcD'; $x[1];"
     var tree;
     beforeEach(function() {
       tree = grammar.parse(programm);
@@ -46,7 +46,7 @@ describe("SimpleScript", function() {
       var vm = SimpleScript.createVM();
       vm.load(instructions);
       vm.run();
-      expect(vm.stack().pop()).to.equal(7);
+      expect(vm.stack().pop()).to.equal('b'.charCodeAt(0));
     });
   });
 });

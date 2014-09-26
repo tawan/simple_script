@@ -61,7 +61,7 @@ describe("SimpleScript", function() {
     describe("Char", function() {
       var _char;
       var value = "a";
-      var nativeValue = value.charCodeAt(0);
+      var nativeValue = value;
 
       beforeEach(function() {
         number = SimpleScript.treeFactory.createNode({ type: "_char", value: value });
@@ -116,6 +116,43 @@ describe("SimpleScript", function() {
       describe("#visit", function() {
         it("pushes its assigned value", function() {
           ident.visit(programm);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "local", 0 ]);
+        });
+      });
+    });
+
+    describe("Accessor", function() {
+      var accessor;
+      var name = "x";
+      var exp, expSpy;
+      beforeEach(function() {
+        exp = { visit: function(programm) {} };
+        expSpy = sinon.spy(exp, "visit");
+        accessor = SimpleScript.treeFactory.createNode({
+          type: "accessor", value: name,
+          children: [ exp ]
+        });
+      });
+
+
+      describe("#name", function() {
+        it("returns its name", function() {
+          expect(accessor.name()).to.equal(name);
+        });
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() { accessor.visit(programm); });
+
+        it("visits its children", function() {
+          expect(expSpy.calledWith(programm)).to.be.true;
+        });
+
+        it("instructs to push string adress and to add", function() {
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "local" ]);
+          expect(programm.pop().instr).to.deep.equal([ "ADD" ]);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 1 ]);
+          expect(programm.pop().instr).to.deep.equal([ "ADD" ]);
           expect(programm.pop().instr).to.deep.equal([ "PUSH", "local", 0 ]);
         });
       });

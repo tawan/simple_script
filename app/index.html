@@ -155,6 +155,7 @@
                 tree = grammar.parse(editor.getValue());
               }
               catch(e) {
+                console.log(e);
                 return;
               };
               instructions = SimpleScript.createInstructionSet();
