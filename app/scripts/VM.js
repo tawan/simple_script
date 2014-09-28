@@ -191,6 +191,19 @@ var SimpleScript = (function(my) {
       },
       stackPointer: function() {
         return stackPointer;
+      },
+
+      "ARRAY": function(adress) {
+        var itemCount = this.stack().pop();
+        for (var i = itemCount; i > 0; i--) {
+          this.memory()['local'][adress + i] = null;
+        }
+
+        this.memory()['local'][adress] = itemCount;
+        this.stack().push(adress);
+      },
+      stackPointer: function() {
+        return stackPointer;
       }
     };
   };

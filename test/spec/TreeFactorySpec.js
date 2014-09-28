@@ -100,6 +100,28 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("Array", function() {
+      var string, itemCount, itemCountSpy;
+
+      beforeEach(function() {
+        itemCount = { visit: function(programm) {} };
+        itemCountSpy = sinon.spy(itemCount, "visit");
+        string = SimpleScript.treeFactory.createNode({ type: "arr", children: [ itemCount ]});
+      });
+
+      describe("#visit", function() {
+          beforeEach(function() { string.visit(programm); });
+
+          it("visits its children", function() {
+            expect(itemCountSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("instructs to create array", function() {
+            expect(programm.pop().instr).to.deep.equal([ "ARRAY", 0 ]);
+          });
+      });
+    });
+
 
     describe("Ident", function() {
       var ident;

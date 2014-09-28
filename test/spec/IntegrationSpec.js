@@ -49,4 +49,21 @@ describe("SimpleScript", function() {
       expect(vm.stack().pop()).to.equal('b'.charCodeAt(0));
     });
   });
+
+  describe("program with array", function() {
+    var programm = "$x = array(5 + 3); $x;"
+    var tree;
+    beforeEach(function() {
+      tree = grammar.parse(programm);
+    });
+
+    it("performs correctly", function() {
+      var instructions = SimpleScript.createInstructionSet();
+      tree.visit(instructions);
+      var vm = SimpleScript.createVM();
+      vm.load(instructions);
+      vm.run();
+      expect(vm.stack().pop()).to.equal(0);
+    });
+  });
 });

@@ -271,6 +271,21 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("#ARRAY", function() {
+      it("pops item count, allocs memory and pushes adress of array", function() {
+        subject.memory().local[1] = 232
+        subject.memory().local[2] = 232
+        subject.memory().local[3] = 232
+        subject.stack().push(3);
+        subject["ARRAY"](0);
+        expect(subject.memory().local[0]).to.equal(3);
+        expect(subject.memory().local[1]).to.equal(null);
+        expect(subject.memory().local[2]).to.equal(null);
+        expect(subject.memory().local[3]).to.equal(null);
+        expect(subject.stack().pop()).to.equal(0);
+      });
+    });
+
     describe("#READ", function() {
       it("stores value returned by read callback into local segment", function() {
         subject.readCallback = function() { return 666; };

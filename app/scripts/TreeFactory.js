@@ -72,6 +72,16 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      arr: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          var adress = programm.getIndex(null);
+          programm.push({ line: this.line(), instr: [ "ARRAY", adress ] });
+        };
+
+        return n;
+      })(),
+
       ident: (function() {
         var n = Object.create(node);
         n.name = function() {
