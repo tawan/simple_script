@@ -7,7 +7,6 @@
 \s+                   /* skip whitespace */
 ";"                   return 'SEMI'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
-"'"                   return 'QUOTE'
 "print"               return 'PRINT'
 "read"                return 'READ'
 "while"               return 'WHILE'
@@ -19,8 +18,7 @@
 "}"                   return '}'
 ">"                   return 'GRT'
 "<"                   return 'LGT'
-[a-z]                 return 'CHAR'
-\$[a-z]+              return 'IDENT'
+[a-z]+                return 'IDENT'
 "*"                   return '*'
 "+"                   return '+'
 "="                   return '='
@@ -93,27 +91,11 @@ exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "multiplication", children: [ $1, $3 ]}); }
     | NUMBER
         {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
-    | string
-        {$$ = $1 }
     | ident
         {$$ =  $1 }
     ;
 ident
     : IDENT
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 }); }
-    ;
-string
-    : char_list QUOTE
-      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "string", children: $1 }); }
-    ;
-char_list
-    : QUOTE char
-      { $$ = SimpleScript.createEnumerable(); $$.push($2); }
-    | char_list char
-      { $1.push($2); $$ = $1; }
-    ;
-char
-    : CHAR
-      {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "_char", value: $1 });}
     ;
  

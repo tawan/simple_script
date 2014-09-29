@@ -19,15 +19,6 @@ var SimpleScript = (function(my) {
         };
 
         return storage;
-      })(),
-
-      ascii: (function() {
-        var storage = [];
-        for (var i = 0; i < 128; i++) {
-          storage.push(String.fromCharCode(i));
-        };
-
-        return storage;
       })()
     };
 
@@ -176,16 +167,6 @@ var SimpleScript = (function(my) {
           throw "Cannot print because no callback is set!";
         }
       },
-
-      "STRING": function(charCount, adress) {
-        for (var i = 0; i < charCount; i++) {
-          var currChar = this.stack().pop();
-          this.memory()['local'][adress + 1 + i] = currChar;
-        }
-
-        this.memory()['local'][adress] = charCount;
-        this.stack().push(adress);
-      },
       stackPointer: function() {
         return stackPointer;
       }
@@ -199,11 +180,6 @@ var SimpleScript = (function(my) {
     var labelCount = 0;
 
     set.getIndex = function(variable) {
-      if(variable === null) {
-        var index = variablesCount;
-        variablesCount++;
-        return index;
-      }
       if ( typeof variablesIndexMapping[variable] === 'undefined') {
         variablesIndexMapping[variable] = variablesCount;
         variablesCount++;
