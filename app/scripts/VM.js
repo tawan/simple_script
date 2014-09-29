@@ -72,6 +72,9 @@ var SimpleScript = (function(my) {
       },
 
       "PUSH": function(segment, index) {
+        if ( typeof index === 'undefined') {
+          index = this.stack().pop();
+        }
         var value = this.memory()[segment][index];
         this.stack().push(value);
       },
@@ -90,6 +93,7 @@ var SimpleScript = (function(my) {
 
       "POP": function(segment, index) {
         var value = this.stack().pop();
+        var index = this.stack().pop();
         this.memory()[segment][index] =  value;
       },
 
@@ -142,11 +146,22 @@ var SimpleScript = (function(my) {
         };
       },
 
+      "MALLOC": function(segment) {
+        var size = this.stack().pop();
+        var adress = this.currentInstructions().malloc(size);
+        this.stack().push(adress);
+      },
+
+      stackPointer: function() {
+        return stackPointer;
+      },
+
       "LABEL": function(label) {
         //do nothing
       },
 
       "READ": function(segment, index) {
+        var index = this.stack().pop();
         if(typeof this.readCallback == 'function') {
             this.memory()[segment][index] =  this.readCallback();
         }
@@ -191,6 +206,11 @@ var SimpleScript = (function(my) {
         return labelCount++;
     };
 
+    set.malloc = function(size) {
+      var current = variablesCount;
+      variablesCount = variablesCount + size;
+      return current;
+    };
 
     return set;
   };

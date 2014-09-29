@@ -10,7 +10,9 @@ var SimpleScript = (function(my) {
       },
 
       visit: function(programm) {
-        this.children().each(function(child) { child.visit(programm); });
+        this.children().each(function(child) {
+          child.visit(programm); 
+        });
         this.pushToStack(programm);
       },
 
@@ -54,7 +56,53 @@ var SimpleScript = (function(my) {
 
         n.visit = function(programm) {
           var index = programm.getIndex(this.name());
+          programm.push({ line: this.line(), instr: [ "PUSH", "constant", index ] });
+          programm.push({ line: this.line(), instr: [ "PUSH", "local" ] });
+        };
+
+        return n;
+      })(),
+
+      adress: (function() {
+        var n = Object.create(node);
+        n.name = function() {
+          return this._value;
+        };
+
+        n.visit = function(programm) {
+          var index = programm.getIndex(this.name());
+          programm.push({ line: this.line(), instr: [ "PUSH", "constant", index ] });
+        };
+
+        return n;
+      })(),
+
+      adress_with_acc: (function() {
+        var n = Object.create(node);
+        n.name = function() {
+          return this._value;
+        };
+
+        n.pushToStack = function(programm) {
+          var index = programm.getIndex(this.name());
           programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
+          programm.push({ line: this.line(), instr: [ "ADD" ] });
+        };
+
+        return n;
+      })(),
+
+      ident_with_acc: (function() {
+        var n = Object.create(node);
+        n.name = function() {
+          return this._value;
+        };
+
+        n.pushToStack = function(programm) {
+          var index = programm.getIndex(this.name());
+          programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
+          programm.push({ line: this.line(), instr: [ "ADD" ] });
+          programm.push({ line: this.line(), instr: [ "PUSH", "local" ] });
         };
 
         return n;
@@ -133,6 +181,15 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      "array": (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "MALLOC", "local" ] });
+        };
+
+        return n;
+      })(),
+
       print: (function() {
         var n = Object.create(node);
         n.pushToStack = function(programm) {
@@ -144,9 +201,8 @@ var SimpleScript = (function(my) {
 
       read: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
-          var index = programm.getIndex(this.children()[0].name());
-          programm.push({ line: this.line(), instr: [ "READ", "local", index ] });
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "READ", "local"] });
         };
 
         return n;
@@ -154,10 +210,8 @@ var SimpleScript = (function(my) {
 
       assignment: (function() {
         var n = Object.create(node);
-        n.visit = function(programm) {
-          this.children()[1].visit(programm);
-          var index = programm.getIndex(this.children()[0].name());
-          programm.push({ line: this.line(), instr: [ "POP", "local", index ] });
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "POP", "local"] });
         };
 
         return n;

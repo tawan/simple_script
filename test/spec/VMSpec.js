@@ -119,6 +119,15 @@ describe("SimpleScript", function() {
         subject["PUSH"]("local", 0);
         expect(subject.stack().pop()).to.equal(666);
       });
+
+      describe("without index", function() {
+        it("pops index and pushes from a given segment with index to the stack", function() {
+          subject.memory().local[9] =  666;
+          subject.stack().push(9);
+          subject["PUSH"]("local");
+          expect(subject.stack().pop()).to.equal(666);
+        });
+      });
     });
 
     describe("#ADD", function() {
@@ -198,10 +207,11 @@ describe("SimpleScript", function() {
     });
 
     describe("#POP", function() {
-      it("pops value and stores it into given segment at given index", function() {
+      it("pops index and value and stores it into given segment at given index", function() {
+        subject.stack().push(1);
         subject.stack().push(666);
-        subject["POP"]("local", 0);
-        expect(subject.memory().local[0]).to.equal(666);
+        subject["POP"]("local");
+        expect(subject.memory().local[1]).to.equal(666);
       });
     });
 
@@ -236,11 +246,24 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("#MALLOC", function() {
+      it("allocates memory and pushes adress", function() {
+        var instructions  = { malloc: function(size) { return 0;} };
+        var instructionsSpy = sinon.spy(instructions, 'malloc');
+        subject.load(instructions);
+        subject.stack().push(2);
+        subject["MALLOC"]("local");
+        expect(subject.stack().pop()).to.equal(0);
+        expect(instructionsSpy.calledWith(2)).to.be.true;
+      });
+    });
+
     describe("#READ", function() {
       it("stores value returned by read callback into local segment", function() {
         subject.readCallback = function() { return 666; };
-        subject["READ"]("local", 0);
-        expect(subject.memory().local[0]).to.equal(666);
+        subject.stack().push(2);
+        subject["READ"]("local");
+        expect(subject.memory().local[2]).to.equal(666);
       });
     });
   });
@@ -260,6 +283,14 @@ describe("SimpleScript", function() {
       expect(subject.getIndex("x")).to.equal(0);
       expect(subject.getIndex("y")).to.equal(1);
       expect(subject.getIndex("x")).to.equal(0);
+    });
+
+    describe("malloc", function() {
+      it("allocates memory", function() {
+        expect(subject.getIndex("x")).to.equal(0);
+        expect(subject.malloc(4)).to.equal(1);
+        expect(subject.getIndex("y")).to.equal(5);
+      });
     });
   });
 });

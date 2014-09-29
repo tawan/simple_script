@@ -72,13 +72,97 @@ describe("SimpleScript", function() {
       });
 
       describe("#visit", function() {
-        it("pushes its assigned value", function() {
+        it("pushes its index and assigned value", function() {
           ident.visit(programm);
-          expect(programm.pop().instr).to.deep.equal([ "PUSH", "local", 0 ]);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "local"]);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 0]);
+        });
+      });
+
+      describe("Ident with accessor", function() {
+        var ident, exp, expSpy;
+        var name = "x";
+        beforeEach(function() { 
+          exp = { visit: function() {} };
+          expSpy = sinon.spy(exp, 'visit');
+          ident = SimpleScript.treeFactory.createNode({ type: "ident_with_acc", value: name, children: [ exp ] }); 
+        });
+
+
+        describe("#name", function() {
+          it("returns its name", function() {
+            expect(ident.name()).to.equal(name);
+          });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() {ident.visit(programm); });
+
+          it("visits its children", function() {
+            expect(expSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("adds index and pushes its assigned value", function() {
+            ident.visit(programm);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "local"]);
+            expect(programm.pop().instr).to.deep.equal([ "ADD" ]);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "local", 0]);
+          });
         });
       });
     });
-    
+
+    describe("Adress", function() {
+      var adress;
+      var name = "x";
+      beforeEach(function() { adress = SimpleScript.treeFactory.createNode({ type: "adress", value: name }); });
+
+
+      describe("#name", function() {
+        it("returns its name", function() {
+          expect(adress.name()).to.equal(name);
+        });
+      });
+
+      describe("#visit", function() {
+        it("pushes its assigned adress", function() {
+          adress.visit(programm);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 0 ]);
+        });
+      });
+
+      describe("Adress with accessor", function() {
+        var adress, exp, expSpy;
+        var name = "x";
+        beforeEach(function() { 
+          exp = { visit: function() {} };
+          expSpy = sinon.spy(exp, 'visit');
+          adress = SimpleScript.treeFactory.createNode({ type: "adress_with_acc", value: name, children: [ exp] });
+        });
+
+
+        describe("#name", function() {
+          it("returns its name", function() {
+            expect(adress.name()).to.equal(name);
+          });
+        });
+
+        describe("#visit", function() {
+          beforeEach(function() {adress.visit(programm); });
+
+          it("visits its children", function() {
+            expect(expSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("pushes its assigned adress and adds", function() {
+            adress.visit(programm);
+            expect(programm.pop().instr).to.deep.equal([ "ADD" ]);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "local", 0 ]);
+          });
+        });
+      });
+    });
+
     describe("Binary operation", function() {
       var left, right, leftSpy, rightSpy;
 
@@ -223,7 +307,7 @@ describe("SimpleScript", function() {
       beforeEach(function() {
         expr = { visit: function(programm) {} };
         exprSpy = sinon.spy(expr, "visit");
-        ident = { name: function() { return name; } };
+        ident = { visit: function(programm) { } };
         assignment = SimpleScript.treeFactory.createNode({ type: "assignment", children: [ ident, expr ]});
       });
 
@@ -235,25 +319,25 @@ describe("SimpleScript", function() {
         });
 
         it("instructs to pop the stacked value into the local segment with the correct index", function() {
-          expect(programm.pop().instr).to.deep.equal(["POP", "local", 0]);
+          expect(programm.pop().instr).to.deep.equal(["POP", "local"]);
         });
       });
     });
 
     describe("Read", function() {
-      var read, ident;
+      var read, adress;
       var name = "x";
 
       beforeEach(function() {
-        ident = { name: function() { return name; } };
-        read = SimpleScript.treeFactory.createNode({ type: "read", children: [ ident ]});
+        adress = { visit: function() { return 0; } };
+        read = SimpleScript.treeFactory.createNode({ type: "read", children: [ adress ]});
       });
 
       describe("#visit", function() {
         beforeEach(function() { read.visit(programm); });
 
         it("instructs to read into the local segment with the correct index", function() {
-          expect(programm.pop().instr).to.deep.equal(["READ", "local", 0]);
+          expect(programm.pop().instr).to.deep.equal(["READ", "local"]);
         });
       });
     });
@@ -300,6 +384,28 @@ describe("SimpleScript", function() {
 
         it("visits its block", function() {
           expect(blockSpy.calledWith(programm)).to.be.true;
+        });
+      });
+    });
+
+    describe("array", function() {
+      var arr, exp, expSpy;
+
+      beforeEach(function() {
+        exp = { visit: function(programm) {} };
+        expSpy = sinon.spy(exp, "visit");
+        arr = SimpleScript.treeFactory.createNode({ type: "array", children: [ exp ]});
+      });
+
+      describe("#visit", function() {
+        beforeEach(function() {arr.visit(programm); });
+
+        it("visits its condition", function() {
+          expect(expSpy.calledWith(programm)).to.be.true;
+        });
+
+        it("allocates local memory", function() {
+          expect(programm.pop().instr).to.deep.equal(["MALLOC", "local"]);
         });
       });
     });

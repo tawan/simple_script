@@ -1,6 +1,6 @@
 describe("SimpleScript", function() {
   describe("simple program", function() {
-    var programm = "read x; y = (1 + x) * (5 + 5); x = y + 1; x;";
+    var programm = "x = read; y = (1 + x) * (5 + 5); x = y * 2 * 3; x;";
     var tree;
     beforeEach(function() {
       tree = grammar.parse(programm);
@@ -12,7 +12,7 @@ describe("SimpleScript", function() {
       var vm = SimpleScript.createVM(function() {return 2;});
       vm.load(instructions);
       vm.run();
-      expect(vm.stack().pop()).to.equal(31);
+      expect(vm.stack().pop()).to.equal(180);
     });
   });
 
@@ -30,6 +30,23 @@ describe("SimpleScript", function() {
       vm.load(instructions);
       vm.run();
       expect(vm.stack().pop()).to.equal(105);
+    });
+  });
+
+  describe("program with arrays", function() {
+    var programm = "x = array(2);y = 4; x[0] = (y + 1); x[1] = 3; z = x[0] * x[1] * y; z;"
+    var tree;
+    beforeEach(function() {
+      tree = grammar.parse(programm);
+    });
+
+    it("performs correctly", function() {
+      var instructions = SimpleScript.createInstructionSet();
+      tree.visit(instructions);
+      var vm = SimpleScript.createVM();
+      vm.load(instructions);
+      vm.run();
+      expect(vm.stack().pop()).to.equal(60);
     });
   });
 });

@@ -7,6 +7,7 @@
 \s+                   /* skip whitespace */
 ";"                   return 'SEMI'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
+"array"               return 'ARRAY'
 "print"               return 'PRINT'
 "read"                return 'READ'
 "while"               return 'WHILE'
@@ -24,6 +25,8 @@
 "="                   return '='
 "("                   return '('
 ")"                   return ')'
+"["                   return '['
+"]"                   return ']'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -68,9 +71,11 @@ stmt_list
     ;
 
 stmt
-    : ident '=' exp
+    : adress READ
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "read", children: [$1 ] }); }
+    | adress exp
         {
-          $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "assignment", children: [ $1, $3 ]});
+          $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "assignment", children: [ $1, $2 ]});
         }
     | exp
         { $$ = $1; }
@@ -78,24 +83,32 @@ stmt
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "whileLoop", children: [ $3, $5 ] }); }
     | PRINT exp
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "print", children: [ $2 ] }); }
-    | READ ident
-      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "read", children: [ $2 ] }); }
+    ;
+adress
+    : IDENT'='
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "adress", value: $1 }); }
+    | IDENT'['exp']''='
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "adress_with_acc", value: $1, children: [ $3 ] }); }
     ;
 
 exp
     : '(' exp ')'
         { $$ = $2;  }
+    | ARRAY'('exp')'
+        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "array", children: [ $3 ] });}
     | exp '+' exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "addition", children: [ $1, $3 ]}); }
     | exp '*' exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "multiplication", children: [ $1, $3 ]}); }
     | NUMBER
         {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
-    | ident
-        {$$ =  $1 }
-    ;
-ident
-    : IDENT
+    | IDENT'['exp']'
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident_with_acc", value: $1, children: [ $3 ] }); }
+    | IDENT
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 }); }
+    ;
+number
+    : NUMBER
+        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
     ;
  
