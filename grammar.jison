@@ -19,7 +19,6 @@
 "}"                   return '}'
 ">"                   return 'GRT'
 "<"                   return 'LGT'
-"array"               return 'ARRAY'
 [a-z|A-Z]             return 'CHAR'
 \$[a-z]+              return 'IDENT'
 "*"                   return '*'
@@ -94,24 +93,18 @@ exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "addition", children: [ $1, $3 ]}); }
     | exp '*' exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "multiplication", children: [ $1, $3 ]}); }
-    | number
-        {$$ = $1 }
+    | NUMBER
+        {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
     | ident'['exp']'
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "accessor", value: $1, children: [ $3 ] }); }
     | string
         {$$ = $1 }
     | ident
         {$$ =  $1 }
-    | ARRAY'('exp')'
-      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "arr", children: $3 }); }
     ;
 ident
     : IDENT
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 }); }
-    ;
-number
-    : NUMBER
-      {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
     ;
 string
     : char_list QUOTE
