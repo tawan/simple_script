@@ -53,7 +53,7 @@ var SimpleScript = (function(my) {
         };
 
         n.nativeValue = function() {
-          return this._value;
+          return this._value.charCodeAt(0);
         };
         return n;
       })(),
@@ -81,24 +81,6 @@ var SimpleScript = (function(my) {
         n.visit = function(programm) {
           var index = programm.getIndex(this.name());
           programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
-        };
-
-        return n;
-      })(),
-
-      accessor: (function() {
-        var n = Object.create(node);
-        n.name = function() {
-          return this._value;
-        };
-
-        n.pushToStack = function(programm) {
-          var index = programm.getIndex(this.name());
-          programm.push({ line: this.line(), instr: [ "PUSH", "local", index ] });
-          programm.push({ line: this.line(), instr: [ "ADD" ] });
-          programm.push({ line: this.line(), instr: [ "PUSH", "constant", 1 ] });
-          programm.push({ line: this.line(), instr: [ "ADD" ] });
-          programm.push({ line: this.line(), instr: [ "PUSH", "local" ] });
         };
 
         return n;

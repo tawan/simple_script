@@ -22,9 +22,9 @@ var SimpleScript = (function(my) {
       })(),
 
       ascii: (function() {
-        var storage = {};
+        var storage = [];
         for (var i = 0; i < 128; i++) {
-          storage[String.fromCharCode(i)] = i;
+          storage.push(String.fromCharCode(i));
         };
 
         return storage;
@@ -81,9 +81,6 @@ var SimpleScript = (function(my) {
       },
 
       "PUSH": function(segment, index) {
-        if ( typeof index === 'undefined') {
-          index = this.stack().pop();
-        }
         var value = this.memory()[segment][index];
         this.stack().push(value);
       },
@@ -181,9 +178,9 @@ var SimpleScript = (function(my) {
       },
 
       "STRING": function(charCount, adress) {
-        for (var i = charCount; i > 0; i--) {
+        for (var i = 0; i < charCount; i++) {
           var currChar = this.stack().pop();
-          this.memory()['local'][adress + i] = currChar;
+          this.memory()['local'][adress + 1 + i] = currChar;
         }
 
         this.memory()['local'][adress] = charCount;

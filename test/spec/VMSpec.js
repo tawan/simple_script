@@ -58,9 +58,9 @@ describe("SimpleScript", function() {
         });
 
         it("is initialized ascii chars", function() {
-          expect(subject['A']).to.equal(65);
-          expect(subject['\u0000']).to.equal(0);
-          expect(subject['\x7F']).to.equal(127);
+          expect(subject[65]).to.equal("A");
+          expect(subject[0]).to.equal('\u0000');
+          expect(subject[127]).to.equal('\x7F');
         });
       });
     });
@@ -130,15 +130,6 @@ describe("SimpleScript", function() {
         subject.memory().local[0] =  666;
         subject["PUSH"]("local", 0);
         expect(subject.stack().pop()).to.equal(666);
-      });
-
-      describe("without index", function() {
-        it("pops index and pushes from a given segment with index to the stack", function() {
-          subject.memory().local[9] =  666;
-          subject.stack().push(9);
-          subject["PUSH"]("local");
-          expect(subject.stack().pop()).to.equal(666);
-        });
       });
     });
 
@@ -259,9 +250,9 @@ describe("SimpleScript", function() {
 
     describe("#STRING", function() {
       it("pops char count and all chars and pushes adress of string", function() {
-        subject.stack().push(1);
-        subject.stack().push(2);
         subject.stack().push(3);
+        subject.stack().push(2);
+        subject.stack().push(1);
         subject["STRING"](3, 0);
         expect(subject.memory().local[0]).to.equal(3);
         expect(subject.memory().local[1]).to.equal(1);

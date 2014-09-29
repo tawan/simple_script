@@ -26,8 +26,6 @@
 "="                   return '='
 "("                   return '('
 ")"                   return ')'
-"["                   return '['
-"]"                   return ']'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -95,8 +93,6 @@ exp
         { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "multiplication", children: [ $1, $3 ]}); }
     | NUMBER
         {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
-    | ident'['exp']'
-        { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "accessor", value: $1, children: [ $3 ] }); }
     | string
         {$$ = $1 }
     | ident
