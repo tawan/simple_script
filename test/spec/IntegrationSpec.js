@@ -49,4 +49,21 @@ describe("SimpleScript", function() {
       expect(vm.stack().pop()).to.equal(60);
     });
   });
+
+  describe("program with strings", function() {
+    var programm = "x = \"AbcD\"; z = x[1]; z;"
+    var tree;
+    beforeEach(function() {
+      tree = grammar.parse(programm);
+    });
+
+    it("performs correctly", function() {
+      var instructions = SimpleScript.createInstructionSet();
+      tree.visit(instructions);
+      var vm = SimpleScript.createVM();
+      vm.load(instructions);
+      vm.run();
+      expect(vm.stack().pop()).to.equal(98);
+    });
+  });
 });

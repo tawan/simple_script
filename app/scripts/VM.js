@@ -91,7 +91,7 @@ var SimpleScript = (function(my) {
         this.stack().push(left * right);
       },
 
-      "POP": function(segment, index) {
+      "POP": function(segment) {
         var value = this.stack().pop();
         var index = this.stack().pop();
         this.memory()[segment][index] =  value;
@@ -150,6 +150,12 @@ var SimpleScript = (function(my) {
         var size = this.stack().pop();
         var adress = this.currentInstructions().malloc(size);
         this.stack().push(adress);
+      },
+
+      "DUP": function(segment) {
+        var item = this.stack().pop();
+        this.stack().push(item);
+        this.stack().push(item);
       },
 
       stackPointer: function() {

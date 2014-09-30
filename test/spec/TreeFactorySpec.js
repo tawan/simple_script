@@ -58,6 +58,56 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("Char", function() {
+      var _char;
+      var value = "a";
+      var nativeValue = value.charCodeAt(0);
+
+      beforeEach(function() {
+        number = SimpleScript.treeFactory.createNode({ type: "_char", value: value });
+      });
+
+      describe("#visit", function() {
+        it("pushes its ASCII code", function() {
+          number.visit(programm);
+          expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", nativeValue ]);
+        });
+      });
+    });
+
+    describe("String", function() {
+      var string, firstChar, secondChar, firstCharSpy, secondCharSpy;
+
+      beforeEach(function() {
+        firstChar = { visit: function(programm) {} };
+        secondChar = { visit: function(programm) {} };
+        firstCharSpy = sinon.spy(firstChar, "visit");
+        secondCharSpy = sinon.spy(secondChar, "visit");
+        string = SimpleScript.treeFactory.createNode({ type: "string", children: [ firstChar, secondChar ]});
+      });
+
+      describe("#visit", function() {
+          beforeEach(function() { string.visit(programm); });
+
+          it("visits its children", function() {
+            expect(secondCharSpy.calledWith(programm)).to.be.true;
+            expect(firstCharSpy.calledWith(programm)).to.be.true;
+          });
+
+          it("instructs to allocate memory for chars", function() {
+            expect(programm.pop().instr).to.deep.equal([ "POP", "local"]);
+            expect(programm.pop().instr).to.deep.equal([ "ADD"]);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 1]);
+            expect(programm.pop().instr).to.deep.equal([ "DUP"]);
+            expect(programm.pop().instr).to.deep.equal([ "POP", "local"]);
+            expect(programm.pop().instr).to.deep.equal([ "ADD"]);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 0]);
+            expect(programm.pop().instr).to.deep.equal([ "DUP"]);
+            expect(programm.pop().instr).to.deep.equal([ "MALLOC", "local"]);
+            expect(programm.pop().instr).to.deep.equal([ "PUSH", "constant", 2]);
+          });
+      });
+    });
 
     describe("Ident", function() {
       var ident;

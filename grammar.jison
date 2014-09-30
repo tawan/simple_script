@@ -2,11 +2,13 @@
 
 /* lexical grammar */
 %lex
+%x string
 %%
 
 \s+                   /* skip whitespace */
 ";"                   return 'SEMI'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
+"'"                   return 'QUOTE'
 "array"               return 'ARRAY'
 "print"               return 'PRINT'
 "read"                return 'READ'
@@ -28,6 +30,10 @@
 "["                   return '['
 "]"                   return ']'
 <<EOF>>               return 'EOF'
+["]                   this.begin("string");
+<string>[^"\n]        return  'CHAR';
+<string><<EOF>>       return 'EOF_IN_STRING';
+<string>["]           this.popState();
 .                     return 'INVALID'
 
 /lex
@@ -106,9 +112,25 @@ exp
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident_with_acc", value: $1, children: [ $3 ] }); }
     | IDENT
       { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "ident", value: $1 }); }
+    | string
+        {$$ = $1 }
     ;
 number
     : NUMBER
         {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "number", value: $1 });}
+    ;
+string
+    : char_list
+      { $$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "string", children: $1 }); }
+    ;
+char_list
+    : char
+      { $$ = SimpleScript.createEnumerable(); $$.push($1); }
+    | char_list char
+      { $1.push($2); $$ = $1; }
+    ;
+char
+    : CHAR
+      {$$ = SimpleScript.treeFactory.createNode({ line: yylineno, firstColumn: this._$.first_column, lastColumn: this._$.last_column, type: "_char", value: $1 });}
     ;
  

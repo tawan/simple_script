@@ -48,6 +48,18 @@ var SimpleScript = (function(my) {
         return n;
       })(),
 
+      _char: (function() {
+        var n = Object.create(node);
+        n.pushToStack = function(programm) {
+          programm.push({ line: this.line(), instr: [ "PUSH", "constant", this.nativeValue() ] });
+        };
+
+        n.nativeValue = function() {
+          return this._value.charCodeAt(0);
+        };
+        return n;
+      })(),
+
       ident: (function() {
         var n = Object.create(node);
         n.name = function() {
@@ -185,6 +197,25 @@ var SimpleScript = (function(my) {
         var n = Object.create(node);
         n.pushToStack = function(programm) {
           programm.push({ line: this.line(), instr: [ "MALLOC", "local" ] });
+        };
+
+        return n;
+      })(),
+
+      "string": (function() {
+        var n = Object.create(node);
+        n.visit = function(programm) {
+          programm.push({ line: this.line(), instr: [ "PUSH", "constant", this.children().length ] });
+          programm.push({ line: this.line(), instr: [ "MALLOC", "local" ] });
+          var charCount = this.children().length;
+          var children = this.children();
+          for (var i = 0; i < charCount; i++) {
+            programm.push({ line: this.line(), instr: [ "DUP" ] });
+            programm.push({ line: this.line(), instr: [ "PUSH", "constant", i ] });
+            programm.push({ line: this.line(), instr: [ "ADD" ] });
+            children[i].visit(programm);
+            programm.push({ line: this.line(), instr: [ "POP", "local" ] });
+          }
         };
 
         return n;

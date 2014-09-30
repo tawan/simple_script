@@ -258,6 +258,15 @@ describe("SimpleScript", function() {
       });
     });
 
+    describe("#DUP", function() {
+      it("pops and duplicates stack item", function() {
+        subject.stack().push(2);
+        subject["DUP"]();
+        expect(subject.stack().pop()).to.equal(2);
+        expect(subject.stack().pop()).to.equal(2);
+      });
+    });
+
     describe("#READ", function() {
       it("stores value returned by read callback into local segment", function() {
         subject.readCallback = function() { return 666; };
