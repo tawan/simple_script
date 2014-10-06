@@ -166,10 +166,15 @@ var SimpleScript = (function(my) {
         //do nothing
       },
 
-      "READ": function(segment, index) {
+      "READ": function(segment) {
         var index = this.stack().pop();
         if(typeof this.readCallback == 'function') {
-            this.memory()[segment][index] =  this.readCallback();
+          var value = this.readCallback();
+          var adress = this.currentInstructions().malloc(value.length);
+          this.memory()[segment][index] = adress;
+          for(var i = adress; i < adress + value.length; i++) {
+            this.memory()[segment][i] = value[i - adress].charCodeAt(0);
+          } 
         }
         else {
           throw "Cannot read because no callback is set!";

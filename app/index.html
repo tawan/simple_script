@@ -90,6 +90,9 @@
 
             </div>
 
+              <input id="read" type="text">
+                
+              </input>
             <div id="editor">
             </div>
             <div>
@@ -159,7 +162,11 @@
               };
               instructions = SimpleScript.createInstructionSet();
               tree.visit(instructions);
-              vm = SimpleScript.createVM(function(output){
+              var reader = function() {
+                var input = jQuery("#read");
+                return input.val();
+              };
+              vm = SimpleScript.createVM(reader, function(output){
                 jQuery("#console").val(output); 
               });
               vm.lineHighlighter = function(line) { editor.gotoLine(line + 1); };

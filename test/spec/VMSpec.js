@@ -269,10 +269,14 @@ describe("SimpleScript", function() {
 
     describe("#READ", function() {
       it("stores value returned by read callback into local segment", function() {
-        subject.readCallback = function() { return 666; };
+        subject.readCallback = function() { return "abc"; };
         subject.stack().push(2);
+        var instructions  = { malloc: function(size) { return 3;} };
+        var instructionsSpy = sinon.spy(instructions, 'malloc');
+        subject.load(instructions);
         subject["READ"]("local");
-        expect(subject.memory().local[2]).to.equal(666);
+        expect(instructionsSpy.calledWith(3)).to.be.true;
+        expect(subject.memory().local[2]).to.equal(3);
       });
     });
   });
