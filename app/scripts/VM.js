@@ -223,6 +223,10 @@ var SimpleScript = (function(my) {
       return current;
     };
 
+    set.mapping = function() {
+      return variablesIndexMapping;
+    };
+
     return set;
   };
 
