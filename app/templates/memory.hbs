@@ -1,9 +1,6 @@
-<table>
-  <tr>
-{{#each memory}}
-  
-<td class="memory"> <span class="index">{{@index}}</span><span class="value">{{this}}</span></td>
-{{/each}}
-</tr>
-</table>
+<div class="memory">
+  {{#each memory}}
+  <div> <span class="index">{{@index}}</span><span class="value">{{this}}</span></div>
+  {{/each}}
+</div>
 
