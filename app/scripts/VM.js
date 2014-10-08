@@ -5,7 +5,7 @@ var SimpleScript = (function(my) {
     var memory = {
       local: (function() {
         var storage = [];
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 100; i++) {
           storage.push(null);
         };
 
