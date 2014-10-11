@@ -34,17 +34,96 @@
 
             <div>
               <h1>Chapter 1: Assignments</h1>
-              <div id="editor" style="height: 80px;">
+              <p>A computer has a memory like we humans do have and it is super
+              important. Without a memory, a comuter is useless. It can't do
+              anything useful without it. The same goes for our brains if you
+              think about it. And I mean in particular our short term memory.
+              Think about it, if you cook same pasta, and you don't know anymore
+              if you had salted the boiling water or not. It happens sometimes I know.
+              Or if you have to add two bigger numbers, during the calculation
+              you will have to remember to carry a digit, most of us are only
+              comfortable to do the math with pen and paper, because it is so
+              super important not to forget the in between results.</p>
+              <p>So how does a computer remember stuff? This is actually very
+              easy. By telling the computer to do so. You, the programmer,
+              command the computer be saying: "Store this in your memory, put
+              this into a box and stick this label onto the box." So to say, the
+              computer's memory is a storage with many unlabeled boxes. You the
+              programmer can write something on a label, for example
+              <code>number of party guests</code>, than you write the number
+              onto a piece of paper and say to the computer: "Here put this
+              paper into a box and stick this label to it!" Now you can come
+              back anytime and ask to computer to look what's inside the box
+              with the label <code>number of party guests</code> and the
+              computer will happily tell you.</p>
+
+              <p>Now many of you think, well I did know this before. I can open
+              a text document and write a number, and name the document "number
+              of party guests" and save it. That is correct in a sense, but
+              difference is, in this case you are not the programmer, you are
+              the user of a programm, that was programmed by someone else, a
+              programmer. You what you are doing is, you say to the application,
+              remember this, and the application than, will tell the computer to
+              remember. However, as a programmer, you talk directly to the
+              computer.</p>
+
+              <p>But how? Do you have to speak loudly into the microphone: "Hey
+              computer, put this in a box and stick this label onto it!" You can
+              try, but it will not work. What we as programmers have to do, is
+              to write a programm, which then the computer will read and
+              execute. So ware telling the computer what to do, by writing it
+              down. And we have to write it down in a way so that the computer
+              understands everything. And the computer does not speak English,
+              the computer only speads programming languages, like SimpleScript.
+              So we as programmers have to learn a programming language before
+              we can give commands to the computer. But don't worry, it is far
+              more easy than to learn aonther human spoken language. When you
+              speak around 30-40 words of this new language, and learn a few
+              simple grammer rules, you can tell the computer anything you can
+              imangine, and the computer will execute all your commands.</p>
+
+              <p>Okay, let's start: How do we say to a computer: "Store this in
+              a box and label it with this!" This is super simple. In the
+              language SimpleScript you say with this single sign
+              <code>=</code>. So to come back to our example, let's tell the
+              computer to remember how many friends assured to come to our party so
+              far. Therfore
+              we need an editor to write it down. Just here below is an open
+              editor we can use. And I already wrote down the command.
+              </p>
+              <div id="editor" style="height: 50px;">
               </div>
               <div id="mapping">
 
               </div>
+              <div><p>Here below is the computer's storage, or memory. It's
+                empty in the beginning. You can see that each little box has a
+                number. That's only interesting for the computer, so that it
+                knows which box is where.</p></div>
               <div id="memory">
 
               </div>
               <div class="btn-group">
-                <button id="step-btn" type="button" class="btn btn-default">Step</button>
+                <button id="step-btn" type="button" class="btn
+                  btn-default">Execute</button>
               </div>
+              <p>So let's examine this command in detail:
+              <code>number_of_guests</code> is our label. We can choose here
+              whatever we want, but we have to follow some rules, which we will
+              see later.<code>=</code> is the verb in this command. It can be
+              translated with <b>remember</b> or <b>put into
+                box</b>.<code>20</code> is actually what the computer should
+              remember, this what the computer should put into the box.</p>
+              <p> And
+              last, but not least, and actually super important we have to end
+              our command properly with the <code>;</code> sign. It is similar
+              important as putting a <b>.</b> to the end of every sentence when
+              you write something in English. Without it, it's a mistake.
+              </p>
+
+              <p>Okay, let's try it out! Click on the button that
+              says <b>execute</b> and look how our number is stored into the
+              first box in the computer's memory.</p>
             </div>
         </div>
 
@@ -107,16 +186,15 @@
             editor.setTheme("ace/theme/solarized_light");
             editor.getSession().setMode("ace/mode/mode-plain_text");
             editor.getSession().setValue(SimpleScript.Templates.assign_script());
+            editor.renderer.setShowGutter(false);
             init();
             editor.getSession().on('change', function(){
                 init();
             });
 
             jQuery('#step-btn').click(function() {
-                vm.step();
+                vm.run();
                 jQuery('#memory').html(SimpleScript.Templates.memory({memory: vm.memory()['local'] })); 
-                jQuery('#mapping').html(SimpleScript.Templates.mapping({mapping:
-                    vm.currentInstructions().mapping()})); 
             });
 
        </script>

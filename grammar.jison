@@ -21,7 +21,7 @@
 "}"                   return '}'
 ">"                   return 'GRT'
 "<"                   return 'LGT'
-[a-z]+                return 'IDENT'
+[a-z|_]+                return 'IDENT'
 "*"                   return '*'
 "+"                   return '+'
 "="                   return '='
