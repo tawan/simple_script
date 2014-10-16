@@ -38,7 +38,7 @@
               concepts in programming: Assignments.</p> When we talk about
               assignments in programming, we mean something that looks similar to
               the line below</p>
-              <div id="editor" style="height: 30px;">
+              <div id="editor" style="height: 20px;">
               </div>
               <p>In this example we assign the number <code>20</code> to the
               <b>variable</b><code>number_of_guests</code>. You don't have to
@@ -139,6 +139,7 @@
               jQuery('#memory').html(SimpleScript.Templates.memory({memory: vm.memory()['local'] })); 
             }
             var editor = ace.edit("editor");
+            editor.setReadOnly(true);
             editor.setTheme("ace/theme/solarized_light");
             editor.getSession().setMode("ace/mode/mode-plain_text");
             editor.getSession().setValue(SimpleScript.Templates.assign_script());
