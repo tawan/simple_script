@@ -17,6 +17,12 @@ describe("SimpleScript", function() {
         subject = subject.memory();
       });
 
+      it("maintains observer list", function() {
+        var observer = {};
+        subject.registerObserver(observer);
+        expect(subject.isObservedBy(observer)).to.be.true;
+      });
+
       it("has segment for local variables", function() {
         expect(subject.local).to.be.defined;
       });

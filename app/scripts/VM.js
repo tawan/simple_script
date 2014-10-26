@@ -1,8 +1,19 @@
 var SimpleScript = (function(my) {
   my.createVM = function(readCallback, printCallback) {
     var stack = [];
+    var memoryObserver = my.createEnumerable();
 
     var memory = {
+      registerObserver: function(observer) {
+        if (!this.isObservedBy(observer)) {
+          memoryObserver.push(observer);
+        }
+      },
+
+      isObservedBy: function(obj) {
+        return memoryObserver.contains(obj);
+      },
+
       local: (function() {
         var storage = [];
         for (var i = 0; i < 100; i++) {
