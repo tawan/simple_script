@@ -28,19 +28,9 @@ describe("SimpleScript", function() {
       });
 
       describe("locals segment", function() {
-        beforeEach(function() {
-          subject = subject.local;
-        });
-
-        it("can add values", function() {
-          subject[0] =  666;
-          expect(subject[0]).to.equal(666);
-        });
-
-        it("initializes with 10 null entries", function() {
-          for(var i = 0; i < 10; i++) {
-            expect(subject[i]).to.be.null;
-          };
+        it("can save values", function() {
+          subject.insert('local', 0, 666);
+          expect(subject.get('local', 0)).to.equal(666);
         });
       });
 
@@ -49,12 +39,9 @@ describe("SimpleScript", function() {
       });
 
       describe("constants segment", function() {
-        beforeEach(function() {
-          subject = subject.constant;
-        });
         it("is initialized with unsigned 8 bit values", function() {
-          expect(subject[0]).to.equal(0);
-          expect(subject[255]).to.equal(255);
+          expect(subject.get('constant', 0)).to.equal(0);
+          expect(subject.get('constant', 255)).to.equal(255);
         });
       });
     });
@@ -217,7 +204,7 @@ describe("SimpleScript", function() {
         subject.stack().push(1);
         subject.stack().push(666);
         subject["POP"]("local");
-        expect(subject.memory().local[1]).to.equal(666);
+        expect(subject.memory().get('local', 1)).to.equal(666);
       });
     });
 
@@ -282,7 +269,7 @@ describe("SimpleScript", function() {
         subject.load(instructions);
         subject["READ"]("local");
         expect(instructionsSpy.calledWith(3)).to.be.true;
-        expect(subject.memory().local[2]).to.equal(3);
+        expect(subject.memory().get('local', 2)).to.equal(3);
       });
     });
   });

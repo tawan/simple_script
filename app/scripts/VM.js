@@ -14,12 +14,16 @@ var SimpleScript = (function(my) {
         return memoryObserver.contains(obj);
       },
 
+      insert: function(segment, index, value) {
+        this[segment][index] = value;
+      },
+
+      get: function(segment, index) {
+        return this[segment][index];
+      },
+
       local: (function() {
         var storage = [];
-        for (var i = 0; i < 100; i++) {
-          storage.push(null);
-        };
-
         return storage;
       })(),
 
@@ -86,7 +90,7 @@ var SimpleScript = (function(my) {
         if ( typeof index === 'undefined') {
           index = this.stack().pop();
         }
-        var value = this.memory()[segment][index];
+        var value = this.memory().get(segment, index);
         this.stack().push(value);
       },
 
@@ -105,7 +109,7 @@ var SimpleScript = (function(my) {
       "POP": function(segment) {
         var value = this.stack().pop();
         var index = this.stack().pop();
-        this.memory()[segment][index] =  value;
+        this.memory().insert(segment, index,  value);
       },
 
       "EQUALS": function() {
