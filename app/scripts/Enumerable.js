@@ -6,13 +6,25 @@ var SimpleScript = (function(my) {
     }
   };
 
+  var contains = function(obj) {
+    var contains = false;
+    this.each(function(item) {
+      if (item == obj) {
+        contains = true;
+      }
+    });
+    return contains;
+  }
+
   enumerable.each = iterator;
+  enumerable.contains = contains;
   my.createEnumerable = function(arr) {
     if (typeof arr == "undefined") {
       return Object.create(enumerable);
     }
     else {
       arr.each = iterator;
+      arr.contains = contains;
       return arr;
     }
   };
