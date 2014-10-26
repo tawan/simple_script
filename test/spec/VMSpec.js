@@ -17,6 +17,22 @@ describe("SimpleScript", function() {
         subject = subject.memory();
       });
 
+      describe("#insert", function() {
+        it("inserts a value", function() {
+          var value = {};
+          subject.insert('local', 99, value);
+          expect(subject.get('local', 99)).to.equal(value);
+        });
+
+        it("notifies observers", function() {
+          var observer = { notify: function(action, args) {} };
+          var observerSpy =  sinon.spy(observer, 'notify');
+          subject.registerObserver(observer);
+          subject.insert('local', 10, 666);
+          expect(observerSpy.calledWith('insert', 'local', 10, 666)).to.be.true;
+        });
+      });
+
       it("maintains observer list", function() {
         var observer = {};
         subject.registerObserver(observer);

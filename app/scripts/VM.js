@@ -16,6 +16,9 @@ var SimpleScript = (function(my) {
 
       insert: function(segment, index, value) {
         this[segment][index] = value;
+        memoryObserver.each(function(observer) {
+          observer.notify('insert', segment, index, value);
+        });
       },
 
       get: function(segment, index) {
